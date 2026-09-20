@@ -7,7 +7,7 @@ export default function App() {
         <div className="game-container">
             <h1>The Last Of Us: RogueLike DeckBuilder Game</h1>
 
-            <div className="player-hand"> {
+            <div className="player-hand flex justify-center gap-4 p-6 flex-wrap"> {
 
                 CARD_DATABASE.map((card) => {
                     return (
