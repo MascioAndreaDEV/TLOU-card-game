@@ -1,21 +1,14 @@
-import { CARD_DATABASE } from "./data/cards";
-import Card from "./components/card";
 import AppHeader from "./components/AppHeader";
-
+import Arena from './components/Arena'
+import Compendium from './components/Compendium'
 export default function App() {
     return (
 
-        <div className="game-container">
+        <div className="game-container flex-1 flex flex-col items-center justify-center m-2 h-screen">
 
             <AppHeader />
 
-            <div className="player-hand flex justify-center gap-4 p-6 flex-wrap"> {
-
-                CARD_DATABASE.map((card) => {
-                    return (
-                        <Card key={card.id} card={card} />)
-                })
-            } </div>
+            <Arena />
 
         </div>)
 }

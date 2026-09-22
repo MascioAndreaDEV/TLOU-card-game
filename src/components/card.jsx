@@ -12,6 +12,7 @@ import {
 
 
 //predisopondo il rendering della carta e i suoi effetti con condizionale react "&&"
+
 export default function Card({ card }) {
 
 
