@@ -2,3 +2,17 @@
    INIZIO SEZIONE: Direttiva base Tailwind CSS v4
    ========================================== */
 @import "tailwindcss";
+
+.font-barlow {
+   font-family: 'Barlow Semi Condensed', sans-serif;
+}
+
+
+body {
+   font-family: 'Barlow Semi Condensed', sans-serif;
+   background-image: url('./assets/bg_images/1301851.jpg');
+   background-position: center;
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-attachment: scroll;
+}
