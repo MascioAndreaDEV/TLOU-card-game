@@ -7,6 +7,6 @@ export default function PayerHand() {
             return (<Card key={card.id} card={card}></Card>
             )
         })
-        )})</div>
+        )}</div>
     )
 }

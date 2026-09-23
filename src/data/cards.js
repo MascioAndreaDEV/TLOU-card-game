@@ -92,7 +92,7 @@ export const CARD_DATABASE = [
         }
     },
 
-    //carta mazza chiodata
+    //carta mazza chiodata--------------------------------
     {
 
         //dati statici della carta
@@ -110,6 +110,8 @@ export const CARD_DATABASE = [
             bleedChance: 1,
         }
     },
+
+    //carta straccio------------------------------------------
     {
         id: 'straccio',
         cardType: 'weapon',
@@ -125,6 +127,11 @@ export const CARD_DATABASE = [
         }
     },
 
+
+    //carta Shotgun ------------------------------------------
+
+
+
     {
         id: 'shotgun',
         cardType: 'weapon',
@@ -132,7 +139,7 @@ export const CARD_DATABASE = [
         name: 'shotgun',
         cost: 1,
         durability: 2,
-        ammoType: 'calibro12',
+        ammoType: 'calibro.12',
         img: shotgun,
         // EFFECT dice qualsi osno gli effetti della carta 
         effects: {
@@ -232,4 +239,67 @@ export const CARD_DATABASE = [
         }
 
     },
+
+    {
+        id: 'Ammo.357',
+        cardType: 'ammo',
+        retainable: true,
+        name: 'Ammo.357',
+        cost: 0,
+        durability: 1,
+        img: thirty57Ammo,
+        effects: {
+
+        }
+    },
+
+    {
+        id: 'Ammo.308',
+        cardType: 'ammo',
+        retainable: true,
+        name: 'Ammo.308',
+        cost: 0,
+        durability: 1,
+        img: thirty08Ammo,
+        effects: {
+
+        }
+
+    },
+
+
+    {
+        id: 'huntingRifle',
+        cardType: 'weapon',
+        retainable: true,
+        name: 'Hunting Rifle',
+        cost: 2,
+        durability: 3,
+        ammoType: 'calibro.308',
+        img: huntingRifle,
+        effects: {
+            damage: 20,
+            bleedChance: 1,
+            dismemberChance: 0.4
+
+        }
+
+
+    },
+    {
+        id: 'ascia',
+        cardType: 'weapon',
+        retainable: true,
+        name: 'Ascia',
+        cost: 1,
+        durability: 3,
+        img: ascia,
+        effects: {
+            damage: 20,
+            bleedChance: 1,
+            dismemberChance: 0.5
+
+        }
+
+    }
 ]
