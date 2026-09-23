@@ -3,7 +3,7 @@ import Card from "./card";
 
 export default function Compendium() {
     return (
-        <div className="player-hand flex justify-center gap-4 p-6 flex-wrap"> {
+        <div className="compendium flex justify-center gap-4 p-6 flex-wrap"> {
 
             CARD_DATABASE.map((card) => {
                 return (
