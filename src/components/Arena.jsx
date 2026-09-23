@@ -18,14 +18,11 @@ export default function Arena() {
 
     //funzione Handler per gestione evento click
 
-    function handleHp() {
-        if (hp >= 10) {
-            setHp(Math.max(0, hp - 10))
+    function handleHp(danno) {
+        if (hp >= 1) {
+            setHp(Math.max(0, hp - danno))
         }
     }
-
-    const hpPercentage = (hp / enemy.hp) * 100;
-
 
     return (
         <div className="arena-container font- flex-1 flex flex-col items-center justify-between border-2 border-dashed border-neutral-700 rounded-lg m-2 w-screen">
@@ -36,7 +33,7 @@ export default function Arena() {
 
             {/*Player Hand meglio in HUD ???*/}
 
-            <PlayerHand />
+            <PlayerHand gestioneDanno={handleHp} />
 
         </div >
     );

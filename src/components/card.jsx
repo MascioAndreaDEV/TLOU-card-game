@@ -13,11 +13,17 @@ import {
 
 //predisopondo il rendering della carta e i suoi effetti con condizionale react "&&"
 
-export default function Card({ card }) {
+export default function Card({ card, gestioneDanno }) {
 
 
     return (
-        <div className="font-barlow card flex flex-col justify-between w-58 h-85 bg-stone-900 border border-zinc-700 text-amber-300 rounded-xl p-4 shadow-lg transition-all duration-200 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+        <div onClick={() => {
+            if (card.effects.damage !== undefined) {
+                gestioneDanno(card.effects.damage)
+            }
+
+
+        }} className="font-barlow card flex flex-col justify-between w-58 h-85 bg-stone-900 border border-zinc-700 text-amber-300 rounded-xl p-4 shadow-lg transition-all duration-200 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
 
             <div className="card-header text-center flex justify-between items-center border-2 border-amber-600 p-2 rounded">
                 <h2>{card.name}</h2>
