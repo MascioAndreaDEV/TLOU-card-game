@@ -1,14 +1,16 @@
 
+export default function PlayerHUD({ characterName, characterImage, characterHp, characterCurrentHp }) {
 
+    const characterHpPercentage = (characterCurrentHp / characterHp) * 100;
 
-
-
-export default function PlayerHUD() {
     return (
         <div className="player-zone flex flex-col items-center text-center">
-            <h3>Joel Miller</h3>
-            <div className="player-hp-bar w-90 h-6 rounded-full overflow-hidden bg-amber-500">
-                <div className="player-hp w-80 h-full bg-red-800"></div>
+            <h3>{characterName}</h3>
+            <p>{characterCurrentHp} / {characterHp} hp</p>
+            {characterCurrentHp === 0 && <p className="font-barlow font-bold uppercase text-red-600">ELIMINATO.</p>}
+            <div className="enemy-hp-bar rounded-full overflow-hidden w-90 h-6 bg-amber-400">
+                <div className="enemy-hp h-full transition-all duration-300 ease-out bg-red-700" style={{ width: `${characterHpPercentage}%` }}></div>
             </div>
-        </div>)
+        </div>
+    )
 }
