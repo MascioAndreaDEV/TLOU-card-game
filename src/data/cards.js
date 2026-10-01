@@ -11,7 +11,6 @@ import molotov from '../assets/img/Molotov.png'
 import spineWood from '../assets/img/spineWood.png'
 import straccio from '../assets/img/straccio.png'
 import ascia from '../assets/img/Ascia.png'
-import melee from '../assets/img/bottle.png'
 import shotgun from '../assets/img/.12Shotgun.png'
 
 
@@ -149,6 +148,8 @@ export const CARD_DATABASE = [
         }
     },
 
+   //carta MP5 ------------------------------------------
+
     {
         id: 'mp5',
         cardType: 'weapon',
@@ -165,6 +166,8 @@ export const CARD_DATABASE = [
             bleedChance: 0.8,
         }
     },
+
+   //carta Glock ------------------------------------------
 
     {
         id: 'Glock9mm',
@@ -184,6 +187,7 @@ export const CARD_DATABASE = [
     },
 
 
+       //carta ammo 12 ------------------------------------------
     {
         id: 'ammo.12',
         cardType: 'ammo',
@@ -195,6 +199,9 @@ export const CARD_DATABASE = [
         effects: {}
 
     },
+
+   //carta ammo 9 ------------------------------------------
+
     {
         id: 'Ammo.9mm',
         cardType: 'ammo',
@@ -207,6 +214,8 @@ export const CARD_DATABASE = [
         effects: {},
 
     },
+
+   //carta medikit ------------------------------------------
 
     {
         id: 'MedKit',
@@ -224,6 +233,8 @@ export const CARD_DATABASE = [
         },
 
     },
+
+   //carta molotov ------------------------------------------
 
     {
         id: 'molotov',

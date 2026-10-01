@@ -4,6 +4,7 @@ import { useState } from 'react';
 import EnemyHUD from './HUD/EnemyHUD';
 import PlayerHUD from './HUD/PlayerHUD';
 import PlayerHand from './PlayerHand';
+import Card from './card';
 
 const enemy = ENEMIES_DATABASE[0]
 
@@ -18,6 +19,8 @@ export default function Arena() {
     const [enemyHp, setEnemyHp] = useState(enemy.hp);
 
     const [playerHp, setPlayerHp] = useState(character.hp);
+
+    const [stamina, setStamina] = useState(3)
 
 
 
@@ -36,17 +39,26 @@ export default function Arena() {
         }
     }
 
+    function handleStamina(costoCarta) {
+        if(stamina < costoCarta) {
+            return false
+        }
+      
+        setStamina(stamina - costoCarta)
+        return true
+    }
+
 
     return (
         <div className="arena-container font- flex-1 flex flex-col items-center justify-between border-2 border-dashed border-neutral-700 rounded-lg m-2 w-screen">
 
             <EnemyHUD nomeNemico={enemy.name} hpNemico={enemy.hp} hpCorrenti={enemyHp} gestioneDanno={handleHp} />
 
-            <PlayerHUD characterName={character.name} characterImage={character.image} characterHp={character.hp} characterCurrentHp={playerHp} />
+            <PlayerHUD characterName={character.name} characterImage={character.image} characterHp={character.hp} characterCurrentHp={playerHp} playerStamina={stamina}/>
 
             {/*Player Hand meglio in HUD ???*/}
 
-            <PlayerHand gestioneDanno={handleHp} />
+            <PlayerHand gestioneDanno={handleHp} gestioneStamina={handleStamina}/>
 
         </div >
     );

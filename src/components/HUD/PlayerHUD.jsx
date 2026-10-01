@@ -1,11 +1,12 @@
 
-export default function PlayerHUD({ characterName, characterImage, characterHp, characterCurrentHp }) {
+export default function PlayerHUD({ characterName, characterHp, characterCurrentHp, playerStamina}) {
 
     const characterHpPercentage = (characterCurrentHp / characterHp) * 100;
 
     return (
         <div className="player-zone flex flex-col items-center text-center">
             <h3>{characterName}</h3>
+            <p>{playerStamina} stamina</p>
             <p>{characterCurrentHp} / {characterHp} hp</p>
             {characterCurrentHp === 0 && <p className="font-barlow font-bold uppercase text-red-600">ELIMINATO.</p>}
             <div className="enemy-hp-bar rounded-full overflow-hidden w-90 h-6 bg-amber-400">
