@@ -241,7 +241,7 @@ export const CARD_DATABASE = [
         cardType: 'weapon',
         retainable: true,
         name: 'molotov',
-        cost: 2,
+        cost: 1,
         durability: 1,
         img: molotov,
         effects: {

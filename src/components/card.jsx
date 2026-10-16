@@ -13,7 +13,7 @@ import {
 
 //predisopondo il rendering della carta e i suoi effetti con condizionale react "&&"
 
-export default function Card({ card, gestioneDanno, gestioneStamina }) {
+export default function Card({ card, gestioneDanno, gestioneStamina, handleDiscard, drawCard, hand }) {
 
 
 
@@ -30,6 +30,8 @@ export default function Card({ card, gestioneDanno, gestioneStamina }) {
             if (card.effects.damage !== undefined) {
                 gestioneDanno(card.effects.damage)
             }
+
+             handleDiscard(card);
 
             
 

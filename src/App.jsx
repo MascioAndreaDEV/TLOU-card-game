@@ -10,5 +10,7 @@ export default function App() {
 
             <Arena />
 
+
+
         </div>)
 }
