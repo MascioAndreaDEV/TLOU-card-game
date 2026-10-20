@@ -1,10 +1,10 @@
 import { CHARACTERS_DATABASE } from '../data/Characters';
 import { ENEMIES_DATABASE } from '../data/enemies';
 import { useState } from 'react';
-import EnemyHUD from './HUD/EnemyHUD';
 import PlayerHUD from './HUD/PlayerHUD';
 import PlayerHand from './PlayerHand';
 import { CARD_DATABASE } from '../data/cards';
+import EnemiesCard from './CharactersCards/EnemiesCard';
 const enemy = ENEMIES_DATABASE[0]
 
 const character = CHARACTERS_DATABASE[0]
@@ -19,13 +19,17 @@ export default function Arena() {
 
     const [playerHp, setPlayerHp] = useState(character.hp);
 
-    const [stamina, setStamina] = useState(3)
+    const [stamina, setStamina] = useState(3);
 
     const [hand, setHand] = useState(CARD_DATABASE.slice(0, 6));
 
-    const [enemyShield, setEnemyShield] = useState(0)
+    const [enemyShield, setEnemyShield] = useState(0);
 
-    const [playerShield, setPlayerShield] = useState(0)
+    const [playerShield, setPlayerShield] = useState(0);
+
+    const [isEnemyAttacking, setIsEnemyAttacking] = useState(false);
+
+    const [isEnemyHit, setIsEnemyHit] = useState(false);
 
 
     //funzione Handler per gestione evento click Nemico e Player
@@ -37,9 +41,7 @@ export default function Arena() {
     }
 
     function handleHp(danno) {
-        if (enemyHp >= 1) {
-            setEnemyHp(Math.max(0, enemyHp - danno))
-        }
+       shieldHandler(danno, playerShield, setPlayerShield, playerHp, setPlayerHp)
     }
 
     function handleEnemyShield(danno) {
@@ -71,6 +73,8 @@ export default function Arena() {
     setHand(hand.filter(c => c.id !== card.id))
 }
 
+//Logica Turno Nemico
+
 function handleEnemyTurn() {
     if(enemyHp > 0) {
 
@@ -80,15 +84,16 @@ function handleEnemyTurn() {
 
 
         if(prossimaMossaNemico.damage > 0) {
-            handlePlayerHp(prossimaMossaNemico.damage)
+            shieldHandler(prossimaMossaNemico.damage, playerShield, setPlayerShield, playerHp, setPlayerHp)
         }
-
         if(prossimaMossaNemico.shield > 0) {
             setEnemyShield(prev => prev + prossimaMossaNemico.shield)
         }
 
     }
 }
+
+//Funzione Pescaggio inizio turno
 
 function refillCard() {
     const carteMancanti = 6 - hand.length;
@@ -110,6 +115,19 @@ function refillCard() {
 }
 
 
+
+function shieldHandler(danno, playerShield, setPlayerShield, playerHp, setPlayerHp) {
+
+    if(danno > playerShield) {
+        setPlayerShield(0)
+        setPlayerHp(Math.max(0, playerHp - (danno - playerShield)))  
+    }
+    else {
+        setPlayerShield(playerShield - danno)
+    }
+}
+
+
 function handleEndTurn(){
         handleEnemyTurn()
         refillCard()
@@ -121,9 +139,9 @@ function handleEndTurn(){
 
 
     return (
-        <div className="arena-container font- flex-1 flex flex-col items-center justify-between border-2 border-dashed border-neutral-700 rounded-lg m-2 w-screen">
+        <div className="arena-container font- flex-1 flex flex-col items-center justify-between rounded-lg m-2 w-screen">
 
-            <EnemyHUD nomeNemico={enemy.name} hpNemico={enemy.hp} hpCorrenti={enemyHp} gestioneDanno={handleHp} gestioneScudo={handleEnemyShield} />
+            <EnemiesCard enemy={enemy}  hpCorrenti={enemyHp} hpNemico={enemy.hp} scudo={enemyShield} isAttacking={false} isHit={false} />
 
             <PlayerHUD characterName={character.name} characterImage={character.image} characterHp={character.hp} characterCurrentHp={playerHp} playerStamina={stamina} gestioneScudo={handlePlayerShield} />
 

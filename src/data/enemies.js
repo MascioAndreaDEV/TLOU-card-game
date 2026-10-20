@@ -1,3 +1,7 @@
+import runnerImg from '../assets/img/clicker.png';
+
+
+
 export const ENEMIES_DATABASE = [
 
     //COSTRUZIONE ENTITÀ NEMICO RUNNER
@@ -5,9 +9,10 @@ export const ENEMIES_DATABASE = [
 
     {
         id: 'runner',
-        name: 'runner',
+        name: 'RUNNER',
         type: 'infected',
         hp: 25,
+        image: runnerImg,
 
         status: {
             isStun: false,
@@ -44,7 +49,7 @@ export const ENEMIES_DATABASE = [
 
     {
         id: 'clicker',
-        name: 'clicker',
+        name: 'CLICKER',
         type: 'infected',
         hp: 50,
 
@@ -90,7 +95,7 @@ export const ENEMIES_DATABASE = [
 
     {
         id: 'stalker',
-        name: 'stalker',
+        name: 'STALKER',
         type: 'infected',
         hp: 35,
         damage: 2,
@@ -138,7 +143,7 @@ export const ENEMIES_DATABASE = [
 
     {
         id: 'bloater',
-        name: 'bloater',
+        name: 'BLOATER',
         type: 'infected',
         hp: 150,
 
