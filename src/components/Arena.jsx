@@ -15,6 +15,7 @@ export default function Arena() {
     //inizializzo useState per gestire i punti vita del nemico e del player.
     //destrutturazione variabile
 
+
     const [enemyHp, setEnemyHp] = useState(enemy.hp);
 
     const [playerHp, setPlayerHp] = useState(character.hp);
@@ -30,6 +31,13 @@ export default function Arena() {
     const [isEnemyAttacking, setIsEnemyAttacking] = useState(false);
 
     const [isEnemyHit, setIsEnemyHit] = useState(false);
+
+
+        //Definisco regole Vittoria Sconfitta
+
+    const isVictory = enemyHp <= 0;
+    const isGameOver = playerHp <= 0;
+    const isBattleOver = isVictory || isGameOver;
 
 
     //funzione Handler per gestione evento click Nemico e Player
@@ -79,8 +87,10 @@ function handleEnemyTurn() {
     if(enemyHp > 0) {
 
         const mossaCasualeNemico = Math.floor(Math.random() * enemy.moves.length)
-
+        
         const prossimaMossaNemico = enemy.moves[mossaCasualeNemico]
+        
+                console.log("il nemico esegue:", prossimaMossaNemico)
 
 
         if(prossimaMossaNemico.damage > 0) {
@@ -133,9 +143,45 @@ function handleEndTurn(){
         refillCard()
         setStamina(3);
 }
- 
- 
 
+// FUnzione unica gestioneGiocataCarta
+
+function handlePlayCard(card) {
+
+    if (isBattleOver === true) {
+        return
+    }
+
+    if (stamina < card.cost) {
+        return
+    }
+        setStamina(stamina - card.cost);
+
+        if(card.effects.damage !== undefined && card.effects.damage > 0) {
+            if (card.effects.damage <= enemyShield) {
+                setEnemyShield(enemyShield - card.effects.damage)
+            }
+            else if (card.effects.damage > enemyShield) {
+                setEnemyShield(0)
+                
+                const dannoResiduo = card.effects.damage - enemyShield
+
+                setEnemyHp(Math.max(0, enemyHp - dannoResiduo))
+            }
+        }
+
+        if (card.effects.shield !== undefined && card.effects.shield > 0) {
+            setPlayerShield(playerShield + card.effects.shield)
+        }
+
+        if (card.effects.heal !== undefined && card.effects.heal > 0) {
+            setPlayerHp(Math.min(character.hp, playerHp + card.effects.heal))
+        }
+
+        handleDiscard(card);
+
+    }
+ 
 
 
     return (
@@ -143,13 +189,13 @@ function handleEndTurn(){
 
             <EnemiesCard enemy={enemy}  hpCorrenti={enemyHp} hpNemico={enemy.hp} scudo={enemyShield} isAttacking={false} isHit={false} />
 
-            <PlayerHUD characterName={character.name} characterImage={character.image} characterHp={character.hp} characterCurrentHp={playerHp} playerStamina={stamina} gestioneScudo={handlePlayerShield} />
+            <PlayerHUD characterName={character.name} characterImage={character.image} characterHp={character.hp} characterCurrentHp={playerHp} playerStamina={stamina} playerShield = {playerShield} />
 
             {/*Player Hand meglio in HUD ???*/}
 
-            <PlayerHand refillCard={refillCard} handleDiscard={handleDiscard} hand={hand} gestioneDanno={handleHp} gestioneStamina={handleStamina}/>
+            <PlayerHand refillCard={refillCard} hand={hand} playedCard={handlePlayCard} />
 
-            <button className='border-2 border-white w-1/4 rounded-lg bg-red-600 text-white' onClick={handleEndTurn}><span className='p-3'>FINE TURNO</span></button> 
+            <button className='border-2 border-white w-1/4 rounded-lg bg-red-600 text-white' onClick={handleEndTurn} disabled={isBattleOver}><span className='"disabled:opacity-40 disabled:cursor-not-allowedtext-white p-2'>FINE TURNO</span></button> 
 
         </div >
     );

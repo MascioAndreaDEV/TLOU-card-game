@@ -11,7 +11,7 @@ export const ENEMIES_DATABASE = [
         id: 'runner',
         name: 'RUNNER',
         type: 'infected',
-        hp: 25,
+        hp: 45,
         image: runnerImg,
 
         status: {
@@ -51,7 +51,7 @@ export const ENEMIES_DATABASE = [
         id: 'clicker',
         name: 'CLICKER',
         type: 'infected',
-        hp: 50,
+        hp: 80,
 
         status: {
             isStun: false,
@@ -97,7 +97,7 @@ export const ENEMIES_DATABASE = [
         id: 'stalker',
         name: 'STALKER',
         type: 'infected',
-        hp: 35,
+        hp: 60,
         damage: 2,
 
         status: {
@@ -145,7 +145,7 @@ export const ENEMIES_DATABASE = [
         id: 'bloater',
         name: 'BLOATER',
         type: 'infected',
-        hp: 150,
+        hp: 180,
 
         status: {
             isStun: false,

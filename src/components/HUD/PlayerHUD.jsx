@@ -1,5 +1,4 @@
-
-export default function PlayerHUD({ characterName, characterHp, characterCurrentHp, playerStamina}) {
+export default function PlayerHUD({ characterName, characterHp, characterCurrentHp, playerStamina, playerShield}) {
 
     const characterHpPercentage = (characterCurrentHp / characterHp) * 100;
 
@@ -12,6 +11,9 @@ export default function PlayerHUD({ characterName, characterHp, characterCurrent
             <div className="enemy-hp-bar rounded-full overflow-hidden w-90 h-6 bg-amber-400">
                 <div className="enemy-hp h-full transition-all duration-300 ease-out bg-red-700" style={{ width: `${characterHpPercentage}%` }}></div>
             </div>
+               <div className="player-badge-section">
+                    <p>Scudo: {playerShield}</p>
+                </div>
         </div>
     )
 }
