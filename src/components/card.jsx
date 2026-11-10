@@ -13,18 +13,34 @@ import {
 } from 'react-icons/gi';
 // === FINE SEZIONE: Import Icone Effetti e Risorse Survival ===
 
-// === INIZIO SEZIONE: Componente Singola Carta Giocabile ===
-export default function Card({ card, playedCard }) {
+// === INIZIO SEZIONE: Componente Singola Carta Giocabile con Affordance UI ===
+export default function Card({
+    card,
+    playedCard,
+    isPlayable = true,
+    hasEnoughStamina = true,
+    hasAmmoForWeapon = true,
+}) {
 
     return (
         <div
-            onClick={() => playedCard && playedCard(card)}
-            className="font-barlow card flex flex-col justify-between w-58 h-85 bg-stone-900 border border-zinc-700 text-amber-300 rounded-xl p-4 shadow-lg transition-all duration-200 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
+            onClick={() => isPlayable && playedCard && playedCard(card)}
+            className={`font-barlow card flex flex-col justify-between w-58 h-85 bg-stone-900 rounded-xl p-4 transition-all duration-200
+                ${isPlayable
+                    ? 'border border-zinc-700 hover:border-amber-500 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.2)] hover:shadow-2xl cursor-pointer'
+                    : 'border border-red-900/70 text-stone-400 opacity-55 grayscale-[40%] cursor-not-allowed shadow-md'
+                }`}
         >
             {/* === INIZIO SEZIONE: Header Carta (Nome, Costo, Tipo) === */}
             <div className="card-header text-center flex justify-between items-center border-2 border-amber-600 p-2 rounded">
                 <h2 className="font-bold truncate">{card.name}</h2>
-                <h4 className="bg-amber-600 text-stone-950 font-bold px-2 py-0.5 rounded-full text-sm">cost {card.cost}</h4>
+                <h4 className={`font-bold px-2 py-0.5 rounded-full text-sm ${
+                    hasEnoughStamina
+                        ? 'bg-amber-600 text-stone-950'
+                        : 'bg-red-700 text-white animate-pulse'
+                }`}>
+                    cost {card.cost}
+                </h4>
                 <h3 className="text-xs uppercase">{card.cardType}</h3>
             </div>
             {/* === FINE SEZIONE: Header Carta (Nome, Costo, Tipo) === */}
@@ -34,12 +50,20 @@ export default function Card({ card, playedCard }) {
                 {card.img && <img className="rounded-xl max-h-36 w-full object-cover" src={card.img} alt={card.name} />}
                 <div className="flex justify-between items-center mt-1 text-xs">
                     {card.durability !== undefined && (
-                        <span className="flex items-center gap-1 bg-stone-800 border border-amber-700/60 px-2 py-0.5 rounded text-amber-200">
+                        <span className={`flex items-center gap-1 bg-stone-800 border px-2 py-0.5 rounded ${
+                            card.durability === 1
+                                ? 'border-red-500 text-red-300'
+                                : 'border-amber-700/60 text-amber-200'
+                        }`}>
                             <GiAnvilImpact /> {card.durability}/{card.maxDurability ?? card.durability}
                         </span>
                     )}
                     {card.ammoType && (
-                        <span className="flex items-center gap-1 bg-stone-800 border border-zinc-600 px-2 py-0.5 rounded text-amber-400">
+                        <span className={`flex items-center gap-1 bg-stone-800 border px-2 py-0.5 rounded ${
+                            hasAmmoForWeapon
+                                ? 'border-zinc-600 text-amber-400'
+                                : 'border-red-600 text-red-400 line-through'
+                        }`}>
                             <GiBullets /> {card.ammoType}
                         </span>
                     )}

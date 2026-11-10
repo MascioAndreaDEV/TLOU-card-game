@@ -28,8 +28,8 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M3: Enemy Intent & Telegrafo** | Visualizzazione mossa nemica preventiva (Intent), ciclo fine turno completo | 🟢 Completata | Completata |
 | **M4: Survival Mechanics** | Durabilità armi (`durability`), armi da fuoco e consumo munizioni (`ammoType`) | 🟢 Completata | Completata |
 | **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | 🟢 Completata | Completata |
-| **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | 🟡 In Corso | **Alta (Urgente)** |
-| **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | ⚪ Da Iniziare | Media |
+| **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | 🟢 Completata | Completata |
+| **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | 🟡 In Corso | **Alta (Urgente)** |
 
 *Legenda: 🟢 Completata | 🟡 In Corso | ⚪ Da Iniziare | 🔴 Bloccata*
 
@@ -91,12 +91,12 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 - [x] **Bleed (`isBleeding`), Burn & Poison (`isPoisoned`)**: Danno periodico a inizio/fine turno e decremento di `duration`.
 - [x] **Cleanse**: Rimozione degli status negativi (es. giocando `MedKit`).
 
-### 🎨 Milestone 6: UI/UX, Card Fanning & Visual Arena
-- [ ] Implementazione disposizione a ventaglio per la mano (`PlayerHand.jsx`) con rotazione e traslazione ad arco.
-- [ ] Elevazione e zoom della carta in hover senza glitch di sovrapposizione (`z-index`).
-- [ ] Indicatori visivi di stamina insufficiente (carta opacizzata/bordo rosso se `stamina < card.cost`).
-- [ ] Contatori visivi per `Draw Pile` e `Discard Pile` nell'HUD/Arena.
-- [ ] Schermata/Banner di Vittoria o Sconfitta con pulsante "Rigioca / Nuovo Scontro".
+### ✅ Milestone 6: UI/UX, Card Fanning & Visual Arena (Completata)
+- [x] Implementazione disposizione a ventaglio per la mano (`PlayerHand.jsx`) con rotazione e traslazione ad arco.
+- [x] Elevazione e zoom della carta in hover senza glitch di sovrapposizione (`z-index`).
+- [x] Indicatori visivi di stamina e munizioni insufficienti (carta opacizzata/bordo rosso se `stamina < card.cost` o calibro mancante).
+- [x] Contatori visivi per `Draw Pile` e `Discard Pile` nell'HUD/Arena.
+- [x] Schermata/Banner di Vittoria o Sconfitta con pulsante "Rigioca / Nuovo Scontro".
 
 ### 🧹 Milestone 7: Pulizia Codice & State Engine Refactoring
 - [ ] Rimuovere le funzioni helper obsolete non più usate in `Arena.jsx` (`handlePlayerHp`, `handleHp`, `handleEnemyShield`, `handlePlayerShield`, `handleStamina`).

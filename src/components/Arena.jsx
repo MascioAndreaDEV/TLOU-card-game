@@ -423,8 +423,41 @@ export default function Arena() {
 
 
 
+    // === INIZIO SEZIONE: Funzione Reset / Nuovo Scontro ===
+    function handleRestartBattle() {
+        const freshDeck = createRuntimeDeck(CARD_DATABASE);
+        setEnemyHp(enemy.hp);
+        setPlayerHp(character.hp);
+        setStamina(3);
+        setEnemyShield(0);
+        setPlayerShield(0);
+        setHand(freshDeck.slice(0, 5));
+        setDrawPile(freshDeck.slice(5));
+        setDiscardPile([]);
+        setAmmoReserve({});
+        setEnemyStatus({
+            ...enemy.status,
+            bleedDuration: 0,
+            bleedDamage: 3,
+            burnDuration: 0,
+            burnDamage: 3,
+        });
+        setPlayerStatus({
+            ...character.status,
+            bleedDuration: 0,
+            bleedDamage: 2,
+            isPoisoned: false,
+            poisonDuration: 0,
+            poisonDamage: 2,
+        });
+        setEnemyIntent(getRandomEnemyMove(enemy));
+        setIsEnemyAttacking(false);
+        setIsEnemyHit(false);
+    }
+    // === FINE SEZIONE: Funzione Reset / Nuovo Scontro ===
+
     return (
-        <div className="arena-container font- flex-1 flex flex-col items-center justify-between rounded-lg m-2 w-screen">
+        <div className="arena-container flex-1 flex flex-col items-center justify-between rounded-lg m-2 w-screen relative">
 
             <EnemiesCard
                 enemy={enemy}
@@ -437,6 +470,22 @@ export default function Arena() {
                 status={enemyStatus}
             />
 
+            {/* === INIZIO SEZIONE: Banner Vittoria / Sconfitta con Pulsante Rigioca === */}
+            {isBattleOver && (
+                <div className="font-barlow flex flex-col items-center gap-3 px-8 py-5 rounded-xl bg-stone-950/95 border-2 border-amber-500 shadow-2xl z-50">
+                    <h2 className={`text-3xl font-bold uppercase tracking-widest ${isVictory ? 'text-emerald-400' : 'text-red-500'}`}>
+                        {isVictory ? 'MINACCIA ELIMINATA — VITTORIA!' : 'SEI SOPRAFFATTO — GAME OVER'}
+                    </h2>
+                    <button
+                        onClick={handleRestartBattle}
+                        className="px-6 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold uppercase tracking-wider transition cursor-pointer"
+                    >
+                        Rigioca / Nuovo Scontro
+                    </button>
+                </div>
+            )}
+            {/* === FINE SEZIONE: Banner Vittoria / Sconfitta con Pulsante Rigioca === */}
+
             <PlayerHUD
                 characterName={character.name}
                 characterImage={character.image}
@@ -448,12 +497,35 @@ export default function Arena() {
                 playerStatus={playerStatus}
             />
 
-            {/*Player Hand meglio in HUD ???*/}
+            {/* === INIZIO SEZIONE: Contatori Mazzo di Pesca, Mano a Ventaglio e Scarti === */}
+            <div className="w-full flex items-center justify-between px-8">
+                <div className="font-barlow flex flex-col items-center px-4 py-2 rounded-lg bg-stone-900/90 border border-amber-700/60 text-amber-300 shadow">
+                    <span className="text-xs uppercase text-stone-400">Draw Pile</span>
+                    <span className="text-2xl font-bold">{drawPile.length}</span>
+                </div>
 
-            <PlayerHand hand={hand} playedCard={handlePlayCard} />
+                <PlayerHand
+                    hand={hand}
+                    playedCard={handlePlayCard}
+                    playerStamina={stamina}
+                    ammoReserve={ammoReserve}
+                />
 
-            <button className='border-2 border-white w-1/4 rounded-lg bg-red-600 text-white' onClick={handleEndTurn} disabled={isBattleOver}><span className='disabled:opacity-40 disabled:cursor-not-allowed text-white p-2'>FINE TURNO</span></button>
+                <div className="font-barlow flex flex-col items-center px-4 py-2 rounded-lg bg-stone-900/90 border border-zinc-700 text-stone-300 shadow">
+                    <span className="text-xs uppercase text-stone-400">Discard Pile</span>
+                    <span className="text-2xl font-bold">{discardPile.length}</span>
+                </div>
+            </div>
+            {/* === FINE SEZIONE: Contatori Mazzo di Pesca, Mano a Ventaglio e Scarti === */}
 
-        </div >
+            <button
+                className="border-2 border-white w-1/4 rounded-lg bg-red-600 hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-2 cursor-pointer transition"
+                onClick={handleEndTurn}
+                disabled={isBattleOver}
+            >
+                FINE TURNO
+            </button>
+
+        </div>
     );
-};
+}
