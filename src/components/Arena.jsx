@@ -28,11 +28,13 @@ export default function Arena() {
         enemyStatus,
         playerStatus,
         enemyIntent,
+        availableCrafts,
         isEnemyAttacking,
         isEnemyHit,
         isVictory,
         isBattleOver,
         handlePlayCard,
+        handleCraftCard,
         handleEndTurn,
         handleRestartBattle,
     } = useCombatEngine({
@@ -85,6 +87,25 @@ export default function Arena() {
                 playerStatus={playerStatus}
             />
             {/* === FINE SEZIONE: HUD Giocatore === */}
+
+            {/* === INIZIO SEZIONE: Barra Crafting Rapido in Combattimento === */}
+            {!isBattleOver && availableCrafts.length > 0 && (
+                <div className="font-barlow flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-xl bg-stone-950/90 border border-amber-500/80 shadow-lg">
+                    <span className="text-xs uppercase font-bold text-amber-400 tracking-wider">
+                        🛠️ Crafting Disponibile:
+                    </span>
+                    {availableCrafts.map((craftItem) => (
+                        <button
+                            key={craftItem.id}
+                            onClick={() => handleCraftCard(craftItem)}
+                            className="px-3 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 text-xs font-bold uppercase cursor-pointer transition shadow"
+                        >
+                            + Assembla {craftItem.name} ({craftItem.recipe.join(' + ')})
+                        </button>
+                    ))}
+                </div>
+            )}
+            {/* === FINE SEZIONE: Barra Crafting Rapido in Combattimento === */}
 
             {/* === INIZIO SEZIONE: Contatori Mazzo di Pesca, Mano a Ventaglio e Scarti === */}
             <div className="w-full flex items-center justify-between px-8">

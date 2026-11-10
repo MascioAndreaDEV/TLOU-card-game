@@ -25,7 +25,7 @@ export default function PlayerHand({
                 const arcDrop = Math.pow(Math.abs(offsetFromCenter), 1.65) * 6;
                 const isHovered = hoveredIndex === index;
 
-                // Controllo giocabilità carta (Stamina + Munizioni)
+                // Controllo giocabilità carta (Stamina + Munizioni + Non CraftOnly)
                 const hasEnoughStamina = playerStamina >= card.cost;
                 const hasAmmoForWeapon =
                     card.cardType !== "weapon" ||
@@ -34,7 +34,7 @@ export default function PlayerHand({
                     hand.some(
                         (c) => c.cardType === "ammo" && c.ammoType === card.ammoType
                     );
-                const isPlayable = hasEnoughStamina && hasAmmoForWeapon;
+                const isPlayable = hasEnoughStamina && hasAmmoForWeapon && !card.craftOnly;
                 // === FINE SEZIONE: Calcolo Arc Layout Carte (Rotazione e Traslazione Y) ===
 
                 return (

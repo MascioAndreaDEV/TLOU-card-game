@@ -30,6 +30,10 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | 🟢 Completata | Completata |
 | **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | 🟢 Completata | Completata |
 | **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | 🟢 Completata | Completata |
+| **M8: Card Pool Expansion & Crafting** | Nuove carte lore TLOU (27 carte totali), rarità (`starter`/`loot`), Crafting e nuovi effetti | 🟢 Completata | Completata |
+| **M9: Main Menu & Compendium Hub** | Menu principale (`Nuova Partita`, `Compendio`), filtri categoria/rarità e Deckbuilder | 🟡 In Corso | **Alta (Urgente)** |
+| **M10: Event Map & Draft Rewards** | Mappa a nodi/eventi (Scontri, Scavenging, Rifugio, Boss) e scelta ricompensa 1-su-3 | ⚪ Da Iniziare | Media-Alta |
+| **M11: Full Run & Loadout Integration** | Collegamento completo Starter Deck, Sopravvissuto e progressione Run nell'Arena | ⚪ Da Iniziare | Media-Alta |
 
 *Legenda: 🟢 Completata | 🟡 In Corso | ⚪ Da Iniziare | 🔴 Bloccata*
 
@@ -103,6 +107,43 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 - [x] Uniformare il case dei nomi file immagini importati in `cards.js`, `enemies.js` e `Characters.js` (`Bottle.png`, `SpineWood.png`, `Clicker.png`, `Joel.jpg`, `Tommy.jpg`, `Ellie.jpg`, `Abby.jpg`).
 - [x] Correggere il typo nel nome funzione `PayerHand` -> `PlayerHand` in `PlayerHand.jsx` e la sintassi import in `SignaturesCards.jsx`.
 - [x] Migrazione del combat loop verso `useReducer` e custom hook dedicato (`src/hooks/useCombatEngine.js`).
+
+---
+
+## 🛠️ Fase 2: Espansione Carte, Main Menu, Compendium & Mappa ad Eventi (M8–M11)
+
+### ✅ Milestone 8: Espansione Arsenale Carte & Nuove Meccaniche (Completata - 27 Carte)
+- [x] **Approvazione Visual & Lore 1-a-1**: Generazione illustrazione in stile graphic novel TLOU + preview della carta e conferma utente prima dell'inserimento in `cards.js`.
+- [x] **Integrazione Asset già presenti**:
+  - [x] `.357 Revolver` (`weapon`, `ammoType: 'calibro.357'`, usa `.357Revolver.png`).
+  - [x] `Alcool` (`utility`, usa `alcool.png`) e aggiornamento `Straccio` con meccanica Crafting (`Alcool + Straccio` -> `MedKit` o `Molotov`).
+- [x] **Nuove Carte Lore TLOU (con illustrazioni dedicate)**:
+  - [x] `Coltello a Serramanico (Shiv)` — Esecuzione furtiva (danno raddoppiato su nemico `isStun`, `recipe: ['blade', 'straccio']`).
+  - [x] `Mattone (Brick)` — Danno + Stordimento (`stun: true`).
+  - [x] `Bomba Chiodata (Nail Bomb)` — Danno esplosivo + Sanguinamento garantito + Mutilazione (`recipe: ['blade', 'explosive']`).
+  - [x] `Lama / Forbici (Blade)` — Materiale di crafting + taglio rapido d'emergenza (`selfDamage: 1` perché senza manico taglia la mano).
+  - [x] `Polvere Esplosiva / Chimico (Explosive)` — Materiale puro di crafting (`craftOnly: true`, non utilizzabile da sola) per `Nail Bomb` e `Smoke Bomb`.
+  - [x] `Modalità Ascolto (Listen Mode)` — Pesca carte (`draw: 2`) + Scudo tattico.
+  - [x] `Bomba Fumogena (Smoke Bomb)` — Scudo elevato + Stordimento nemico (`recipe: ['explosive', 'straccio']`).
+  - [x] `Integratori / Pillole (Supplements)` — Guadagno Stamina immediato (`staminaGain: 2`) + piccola cura.
+  - [x] `Arco da Caccia (Hunting Bow)` — Colpo silenzioso che ignora lo scudo nemico (`pierceShield: true`).
+- [x] **Separazione `tier` (`starter` vs `common`/`uncommon`/`rare`)** e collegamento nel `useCombatEngine` di `bonusStunDamage`, `bonusBleedDamage`, `pierceShield`, `selfDamage`, `staminaGain`, `draw`, `craftOnly` e Crafting in-hand (`CRAFT_CARD`).
+- [x] **Seconda Ondata Carte Extra Lore TLOU**:
+  - [x] `Machete` — Arma da taglio pesante con bonus danni contro nemici sanguinanti (`bonusBleedDamage`).
+  - [x] `Fucile a Canne Mozze (Shorty)` — Arma compatta `.12` ad alto impatto ravvicinato (`cost: 0`).
+  - [x] `Lanciafiamme (Flamethrower)` — Arma speciale che applica ustione estrema (`burnDamage: 15`).
+
+### 🏠 Milestone 9: Main Menu & Compendium Hub
+- [x] Barra di navigazione in `AppHeader.jsx` e filtri categoria/ricerca base in `Compendium.jsx`.
+- [ ] Creazione schermata **Main Menu** (`Nuova Partita / Run`, `Compendio & Workbench`, `Continua Run`).
+- [ ] Espansione `Compendium.jsx` per mostrare il badge rarità (`Starter` vs `Ottenibile`), gli Infetti e i Sopravvissuti.
+
+### 🗺️ Milestone 10: Mappa di Gioco ad Eventi & Ricompense (Draft)
+- [ ] Mappa a bivi della Zona di Quarantena con nodi: **Scontro Infetto**, **Evento Scavenging** (Farmacia, Cassa FEDRA, Banco da Lavoro), **Rifugio / Falò** (Cura o Rimozione carta) e **Boss Finale (Bloater)**.
+- [ ] Schermata **Ricompensa Post-Scontro**: scelta di 1 nuova carta su 3 dal pool delle carte ottenibili.
+
+### ⚔️ Milestone 11: Integrazione Completa Run & Loadout nell'Arena
+- [ ] Collegamento dello Starter Deck, del Sopravvissuto scelto e degli HP persistenti tra i nodi della Mappa e l'`Arena.jsx`.
 
 <!-- ================================================================= -->
 <!-- FINE SEZIONE: Dettaglio Task per Milestone                        -->

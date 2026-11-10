@@ -2,7 +2,7 @@
 import { useReducer, useState } from 'react';
 // === FINE SEZIONE: Import Dipendenze React per Combat Engine ===
 
-// === INIZIO SEZIONE: Funzioni Pure Helper (Shuffle Fisher-Yates, Deck Runtime, Intent) ===
+// === INIZIO SEZIONE: Funzioni Pure Helper (Shuffle Fisher-Yates, Deck Runtime, Intent, Pescata) ===
 export function shuffleDeck(deck) {
     const copy = [...deck];
     for (let i = copy.length - 1; i > 0; i--) {
@@ -15,7 +15,7 @@ export function shuffleDeck(deck) {
 export function createRuntimeDeck(database) {
     const instances = database.map((card, index) => ({
         ...card,
-        instanceId: `${card.id}_${index}`,
+        instanceId: `${card.id}_${index}_${Math.random().toString(36).slice(2, 6)}`,
         maxDurability: card.durability ?? null,
     }));
     return shuffleDeck(instances);
@@ -26,21 +26,19 @@ export function getRandomEnemyMove(enemyData) {
     return enemyData.moves[randomIndex];
 }
 
-function drawUpToTarget(hand, drawPile, discardPile, targetHandSize = 5) {
-    const keptCards = hand.filter(card => card.retainable === true);
-    const discardedFromHand = hand.filter(card => !card.retainable);
-
+function drawNFromPiles(hand, drawPile, discardPile, count) {
+    if (count <= 0) {
+        return { hand, drawPile, discardPile };
+    }
     let currentDraw = [...drawPile];
-    let currentDiscard = [...discardPile, ...discardedFromHand];
-
-    const cardsNeeded = Math.max(0, targetHandSize - keptCards.length);
+    let currentDiscard = [...discardPile];
     let drawnCards;
 
-    if (currentDraw.length >= cardsNeeded) {
-        drawnCards = currentDraw.slice(0, cardsNeeded);
-        currentDraw = currentDraw.slice(cardsNeeded);
+    if (currentDraw.length >= count) {
+        drawnCards = currentDraw.slice(0, count);
+        currentDraw = currentDraw.slice(count);
     } else {
-        const remainingNeeded = cardsNeeded - currentDraw.length;
+        const remainingNeeded = count - currentDraw.length;
         const reshuffledDiscard = shuffleDeck(currentDiscard);
         drawnCards = [
             ...currentDraw,
@@ -51,12 +49,36 @@ function drawUpToTarget(hand, drawPile, discardPile, targetHandSize = 5) {
     }
 
     return {
-        hand: [...keptCards, ...drawnCards],
+        hand: [...hand, ...drawnCards],
         drawPile: currentDraw,
         discardPile: currentDiscard,
     };
 }
-// === FINE SEZIONE: Funzioni Pure Helper (Shuffle Fisher-Yates, Deck Runtime, Intent) ===
+
+function drawUpToTarget(hand, drawPile, discardPile, targetHandSize = 5) {
+    const keptCards = hand.filter(card => card.retainable === true);
+    const discardedFromHand = hand.filter(card => !card.retainable);
+
+    const currentDiscard = [...discardPile, ...discardedFromHand];
+    const cardsNeeded = Math.max(0, targetHandSize - keptCards.length);
+
+    return drawNFromPiles(keptCards, drawPile, currentDiscard, cardsNeeded);
+}
+
+export function getAvailableCrafts(hand, cardDatabase) {
+    const craftableTemplates = cardDatabase.filter(
+        c => Array.isArray(c.recipe) && c.recipe.length === 2
+    );
+
+    return craftableTemplates.filter(template => {
+        const [ingA, ingB] = template.recipe;
+        if (ingA === ingB) {
+            return hand.filter(c => c.id === ingA).length >= 2;
+        }
+        return hand.some(c => c.id === ingA) && hand.some(c => c.id === ingB);
+    });
+}
+// === FINE SEZIONE: Funzioni Pure Helper (Shuffle Fisher-Yates, Deck Runtime, Intent, Pescata) ===
 
 // === INIZIO SEZIONE: Inizializzatore Stato Combattimento ===
 function createInitialCombatState({ character, enemy, cardDatabase }) {
@@ -97,7 +119,7 @@ function combatReducer(state, action) {
         case 'PLAY_CARD': {
             const { card, character } = action.payload;
             const isBattleOver = state.enemyHp <= 0 || state.playerHp <= 0;
-            if (isBattleOver || state.stamina < card.cost) {
+            if (isBattleOver || state.stamina < card.cost || card.craftOnly) {
                 return state;
             }
 
@@ -127,20 +149,34 @@ function combatReducer(state, action) {
                 nextAmmoReserve[card.ammoType] = (nextAmmoReserve[card.ammoType] || 0) + 1;
             }
 
-            // 3. Pipeline Danni, Scudo e Cura
+            // 3. Pipeline Danni (con bonusStunDamage e pierceShield), Scudo, Cura e selfDamage
             let nextEnemyShield = state.enemyShield;
             let nextEnemyHp = state.enemyHp;
             let nextPlayerShield = state.playerShield;
             let nextPlayerHp = state.playerHp;
 
             if (card.effects?.damage !== undefined && card.effects.damage > 0) {
-                if (card.effects.damage <= nextEnemyShield) {
-                    nextEnemyShield -= card.effects.damage;
+                let totalDamage = card.effects.damage;
+                if (card.effects.bonusStunDamage && state.enemyStatus.isStun) {
+                    totalDamage += card.effects.bonusStunDamage;
+                }
+                if (card.effects.bonusBleedDamage && state.enemyStatus.isBleeding) {
+                    totalDamage += card.effects.bonusBleedDamage;
+                }
+
+                if (card.effects.pierceShield) {
+                    nextEnemyHp = Math.max(0, nextEnemyHp - totalDamage);
+                } else if (totalDamage <= nextEnemyShield) {
+                    nextEnemyShield -= totalDamage;
                 } else {
-                    const dannoResiduo = card.effects.damage - nextEnemyShield;
+                    const dannoResiduo = totalDamage - nextEnemyShield;
                     nextEnemyShield = 0;
                     nextEnemyHp = Math.max(0, nextEnemyHp - dannoResiduo);
                 }
+            }
+
+            if (card.effects?.selfDamage > 0) {
+                nextPlayerHp = Math.max(0, nextPlayerHp - card.effects.selfDamage);
             }
 
             if (card.effects?.shield !== undefined && card.effects.shield > 0) {
@@ -198,7 +234,7 @@ function combatReducer(state, action) {
                 nextHand = nextHand.filter(c => (c.instanceId || c.id) !== targetKey);
             }
 
-            const nextDiscardPile = [...state.discardPile];
+            let nextDiscardPile = [...state.discardPile];
             if (consumedHandAmmoKey) {
                 const usedAmmoCard = state.hand.find(c => (c.instanceId || c.id) === consumedHandAmmoKey);
                 if (usedAmmoCard) {
@@ -215,9 +251,25 @@ function combatReducer(state, action) {
                 });
             }
 
+            // 6. Effetti Extra: Pesca carte immediata (draw) e Guadagno Stamina (staminaGain)
+            let nextDrawPile = [...state.drawPile];
+            if (card.effects?.draw > 0) {
+                const drawResult = drawNFromPiles(
+                    nextHand,
+                    nextDrawPile,
+                    nextDiscardPile,
+                    card.effects.draw
+                );
+                nextHand = drawResult.hand;
+                nextDrawPile = drawResult.drawPile;
+                nextDiscardPile = drawResult.discardPile;
+            }
+
+            const staminaBonus = card.effects?.staminaGain || 0;
+
             return {
                 ...state,
-                stamina: state.stamina - card.cost,
+                stamina: state.stamina - card.cost + staminaBonus,
                 ammoReserve: nextAmmoReserve,
                 enemyShield: nextEnemyShield,
                 enemyHp: nextEnemyHp,
@@ -225,6 +277,52 @@ function combatReducer(state, action) {
                 playerHp: nextPlayerHp,
                 enemyStatus: nextEnemyStatus,
                 playerStatus: nextPlayerStatus,
+                hand: nextHand,
+                drawPile: nextDrawPile,
+                discardPile: nextDiscardPile,
+            };
+        }
+
+        case 'CRAFT_CARD': {
+            const { targetTemplate } = action.payload;
+            const isBattleOver = state.enemyHp <= 0 || state.playerHp <= 0;
+            if (isBattleOver || !Array.isArray(targetTemplate?.recipe)) {
+                return state;
+            }
+
+            const [ingA, ingB] = targetTemplate.recipe;
+            const firstMat = state.hand.find(c => c.id === ingA);
+            if (!firstMat) return state;
+
+            const firstKey = firstMat.instanceId || firstMat.id;
+            const secondMat = state.hand.find(
+                c => c.id === ingB && (c.instanceId || c.id) !== firstKey
+            );
+            if (!secondMat) return state;
+
+            const secondKey = secondMat.instanceId || secondMat.id;
+
+            const craftedInstance = {
+                ...targetTemplate,
+                instanceId: `${targetTemplate.id}_crafted_${Date.now()}`,
+                maxDurability: targetTemplate.durability ?? null,
+            };
+
+            const nextHand = [
+                ...state.hand.filter(
+                    c => (c.instanceId || c.id) !== firstKey && (c.instanceId || c.id) !== secondKey
+                ),
+                craftedInstance,
+            ];
+
+            const nextDiscardPile = [
+                ...state.discardPile,
+                { ...firstMat, durability: firstMat.maxDurability ?? firstMat.durability },
+                { ...secondMat, durability: secondMat.maxDurability ?? secondMat.durability },
+            ];
+
+            return {
+                ...state,
                 hand: nextHand,
                 discardPile: nextDiscardPile,
             };
@@ -365,9 +463,10 @@ export function useCombatEngine({ character, enemy, cardDatabase }) {
     const isVictory = state.enemyHp <= 0;
     const isGameOver = state.playerHp <= 0;
     const isBattleOver = isVictory || isGameOver;
+    const availableCrafts = getAvailableCrafts(state.hand, cardDatabase);
 
     function handlePlayCard(card) {
-        if (isBattleOver || state.stamina < card.cost) return;
+        if (isBattleOver || state.stamina < card.cost || card.craftOnly) return;
 
         if (card.effects?.damage > 0) {
             setIsEnemyHit(true);
@@ -377,6 +476,14 @@ export function useCombatEngine({ character, enemy, cardDatabase }) {
         dispatch({
             type: 'PLAY_CARD',
             payload: { card, character },
+        });
+    }
+
+    function handleCraftCard(targetTemplate) {
+        if (isBattleOver) return;
+        dispatch({
+            type: 'CRAFT_CARD',
+            payload: { targetTemplate },
         });
     }
 
@@ -405,12 +512,14 @@ export function useCombatEngine({ character, enemy, cardDatabase }) {
 
     return {
         ...state,
+        availableCrafts,
         isEnemyAttacking,
         isEnemyHit,
         isVictory,
         isGameOver,
         isBattleOver,
         handlePlayCard,
+        handleCraftCard,
         handleEndTurn,
         handleRestartBattle,
     };

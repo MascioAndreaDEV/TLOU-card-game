@@ -72,15 +72,41 @@ export default function Card({
             {/* === FINE SEZIONE: Immagine e Badge Survival (Durabilità & Munizioni) === */}
 
             {/* === INIZIO SEZIONE: Footer Effetti Carta === */}
-            <div className="card-effects flex justify-around items-center text-center bg-stone-950/60 p-2.5 rounded-lg text-xl border border-stone-800">
-                {card.effects?.damage && <p className="flex items-center gap-1"><GiPunch /> {card.effects.damage}</p>}
+            <div className="card-effects flex flex-wrap justify-around items-center text-center bg-stone-950/60 p-2 rounded-lg text-base gap-1.5 border border-stone-800">
+                {card.effects?.damage && (
+                    <p className="flex items-center gap-1" title="Danno">
+                        <GiPunch /> {card.effects.damage}
+                        {card.effects.bonusStunDamage && (
+                            <span className="text-xs text-amber-400">(+{card.effects.bonusStunDamage} stun)</span>
+                        )}
+                        {card.effects.bonusBleedDamage && (
+                            <span className="text-xs text-red-400">(+{card.effects.bonusBleedDamage} bleed)</span>
+                        )}
+                        {card.effects.pierceShield && (
+                            <span className="text-xs text-sky-300">(Pierce)</span>
+                        )}
+                    </p>
+                )}
+                {card.effects?.selfDamage && (
+                    <p className="text-xs text-red-400 font-bold" title="Danno alla mano">
+                        -{card.effects.selfDamage} HP
+                    </p>
+                )}
                 {card.effects?.shield && <p className="flex items-center gap-1"><GiShield /> {card.effects.shield}</p>}
-                {card.effects?.stun && <GiKnockout />}
-                {card.effects?.bleedChance && <GiBlood />}
-                {card.effects?.dismemberChance && <GiBrokenBone />}
+                {card.effects?.stun && <GiKnockout title="Stordimento" />}
+                {card.effects?.bleedChance && <GiBlood title="Sanguinamento" />}
+                {card.effects?.dismemberChance && <GiBrokenBone title="Mutilazione" />}
                 {card.effects?.heal && <p className="flex items-center gap-1"><GiFirstAidKit /> {card.effects.heal}</p>}
                 {card.effects?.cleanse && <p className="flex items-center gap-1"><GiBandageRoll /></p>}
                 {card.effects?.burnDamage && <p className="flex items-center gap-1"><GiFireflake /> {card.effects.burnDamage}</p>}
+                {card.effects?.staminaGain && <p className="text-xs font-bold text-emerald-400">+{card.effects.staminaGain} STM</p>}
+                {card.effects?.draw && <p className="text-xs font-bold text-sky-400">+{card.effects.draw} Carte</p>}
+                {card.craftOnly && <p className="text-xs text-amber-300 uppercase">Solo Crafting</p>}
+                {card.recipe && (
+                    <p className="w-full text-[10px] text-stone-400 uppercase tracking-tight">
+                        Craft: {card.recipe.join(' + ')}
+                    </p>
+                )}
                 {card.cardType === 'ammo' && <p className="text-xs text-amber-200 uppercase">Carica +1 {card.ammoType}</p>}
             </div>
             {/* === FINE SEZIONE: Footer Effetti Carta === */}
