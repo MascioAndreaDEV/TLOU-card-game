@@ -1,8 +1,10 @@
-import joel from '../assets/img/joel.jpg';
-import tommy from '../assets/img/tommy.jpg';
-import ellie from '../assets/img/ellie.jpg';
+// === INIZIO SEZIONE: Import Immagini Personaggi ===
+import joel from '../assets/img/Joel.jpg';
+import tommy from '../assets/img/Tommy.jpg';
+import ellie from '../assets/img/Ellie.jpg';
 import dina from '../assets/img/Dina.jpg';
-import abby from '../assets/img/abby.jpg';
+import abby from '../assets/img/Abby.jpg';
+// === FINE SEZIONE: Import Immagini Personaggi ===
 
 
 

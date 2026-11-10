@@ -1,4 +1,6 @@
-import runnerImg from '../assets/img/clicker.png';
+// === INIZIO SEZIONE: Import Immagini Nemici ===
+import runnerImg from '../assets/img/Clicker.png';
+// === FINE SEZIONE: Import Immagini Nemici ===
 
 
 

@@ -29,7 +29,7 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M4: Survival Mechanics** | Durabilità armi (`durability`), armi da fuoco e consumo munizioni (`ammoType`) | 🟢 Completata | Completata |
 | **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | 🟢 Completata | Completata |
 | **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | 🟢 Completata | Completata |
-| **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | 🟡 In Corso | **Alta (Urgente)** |
+| **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | 🟢 Completata | Completata |
 
 *Legenda: 🟢 Completata | 🟡 In Corso | ⚪ Da Iniziare | 🔴 Bloccata*
 
@@ -98,11 +98,11 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 - [x] Contatori visivi per `Draw Pile` e `Discard Pile` nell'HUD/Arena.
 - [x] Schermata/Banner di Vittoria o Sconfitta con pulsante "Rigioca / Nuovo Scontro".
 
-### 🧹 Milestone 7: Pulizia Codice & State Engine Refactoring
-- [ ] Rimuovere le funzioni helper obsolete non più usate in `Arena.jsx` (`handlePlayerHp`, `handleHp`, `handleEnemyShield`, `handlePlayerShield`, `handleStamina`).
-- [ ] Uniformare il case dei nomi file immagini importati in `cards.js`, `enemies.js` e `Characters.js` (es. `Bottle.png`, `SpineWood.png`, `Clicker.png`, `Joel.jpg`).
-- [ ] Correggere il typo nel nome funzione `PayerHand` -> `PlayerHand` in `PlayerHand.jsx` e la sintassi import in `SignaturesCards.jsx`.
-- [ ] Migrazione del combat loop verso `useReducer` o custom hook dedicato (`useCombatEngine`).
+### ✅ Milestone 7: Pulizia Codice & State Engine Refactoring (Completata)
+- [x] Rimuovere le funzioni helper obsolete non più usate in `Arena.jsx` (`handlePlayerHp`, `handleHp`, `handleEnemyShield`, `handlePlayerShield`, `handleStamina`, `shieldHandler`) e import inutilizzati (`SiD`).
+- [x] Uniformare il case dei nomi file immagini importati in `cards.js`, `enemies.js` e `Characters.js` (`Bottle.png`, `SpineWood.png`, `Clicker.png`, `Joel.jpg`, `Tommy.jpg`, `Ellie.jpg`, `Abby.jpg`).
+- [x] Correggere il typo nel nome funzione `PayerHand` -> `PlayerHand` in `PlayerHand.jsx` e la sintassi import in `SignaturesCards.jsx`.
+- [x] Migrazione del combat loop verso `useReducer` e custom hook dedicato (`src/hooks/useCombatEngine.js`).
 
 <!-- ================================================================= -->
 <!-- FINE SEZIONE: Dettaglio Task per Milestone                        -->
@@ -114,6 +114,14 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 <!-- INIZIO SEZIONE: Registro delle Sessioni e Commit                  -->
 <!-- ================================================================= -->
 ## 📝 Registro Attività e Sessioni
+
+### Sessione 3 (Implementazione Completa M2 -> M7 per Checkpoint)
+- **Milestone 2**: Implementato deck engine runtime con `instanceId`, shuffle Fisher-Yates, gestione `retainable` e rimescolo automatico degli scarti.
+- **Milestone 3**: Implementato sistema `enemyIntent` con badge telegrafo sopra `EnemiesCard` e animazioni `isEnemyAttacking` / `isEnemyHit`.
+- **Milestone 4**: Implementata durabilità armi (`durability`), riserva/consumo munizioni (`ammoType`), e collegate le immagini mancanti in `cards.js`.
+- **Milestone 5**: Implementato motore status alterati runtime (`isStun`, `isBleeding`, `isPoisoned`, `isDismember`, `burnDuration`, `cleanse`).
+- **Milestone 6**: Implementato layout a ventaglio (`PlayerHand.jsx`), indicatori visivi di giocabilità, contatori `Draw Pile` / `Discard Pile` e banner di fine partita con pulsante "Rigioca / Nuovo Scontro".
+- **Milestone 7**: Estratto il combat loop in `src/hooks/useCombatEngine.js` basato su `useReducer`, pulito il codice in `Arena.jsx`, allineato il case degli import immagini e corretto `SignaturesCards.jsx`.
 
 ### Sessione 2 (Analisi Avanzamento M1 & Pianificazione M2)
 - Completata **Milestone 1**: pipeline danni (`enemyShield` -> `enemyHp`), scudo giocatore (`playerShield`), cure con cap (`Math.min`), turno nemico base con `shieldHandler` e condizioni `isVictory`/`isGameOver`/`isBattleOver`.
