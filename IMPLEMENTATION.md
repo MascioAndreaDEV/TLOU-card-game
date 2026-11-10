@@ -25,8 +25,8 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M0: Foundation** | Setup Vite, Blueprint `cards.js`, `enemies.js`, `Characters.js`, UI base | 🟢 Completata | Bassa |
 | **M1: Damage & Targeting Pipeline** | Correzione bersagli danno/scudo/cura, Win/Loss conditions, Turno Nemico base | 🟢 Completata | Completata |
 | **M2: Deck Engine & Piles** | Mazzo di pesca (`drawPile`), Scarti (`discardPile`), Rimescolamento, `retainable` | 🟢 Completata | Completata |
-| **M3: Enemy Intent & Telegrafo** | Visualizzazione mossa nemica preventiva (Intent), ciclo fine turno completo | 🟡 In Corso | **Alta (Urgente)** |
-| **M4: Survival Mechanics** | Durabilità armi (`durability`), armi da fuoco e consumo munizioni (`ammoType`) | ⚪ Da Iniziare | Media |
+| **M3: Enemy Intent & Telegrafo** | Visualizzazione mossa nemica preventiva (Intent), ciclo fine turno completo | 🟢 Completata | Completata |
+| **M4: Survival Mechanics** | Durabilità armi (`durability`), armi da fuoco e consumo munizioni (`ammoType`) | 🟡 In Corso | **Alta (Urgente)** |
 | **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | ⚪ Da Iniziare | Media |
 | **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | ⚪ Da Iniziare | Media-Alta |
 | **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | ⚪ Da Iniziare | Media |
@@ -69,11 +69,11 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 - [x] **Gestione Scarto a Fine Turno (`retainable`)**:
   - [x] A fine turno, spostare in `discardPile` le carte rimaste in mano che hanno `retainable: false`, mantenendo in mano quelle con `retainable: true`.
 
-### 👁️ Milestone 3: Enemy Intent & Telegrafo
-- [ ] Stato `enemyIntent` calcolato a inizio turno del giocatore e mostrato sopra `EnemiesCard` (icona attacco + valore danno o icona scudo).
-- [ ] In `handleEndTurn`, eseguire la mossa già telegrafata in `enemyIntent` invece di estrarne una al buio.
-- [ ] Generare il nuovo `enemyIntent` per il turno successivo dopo l'azione nemica.
-- [ ] Attivare i feedback visivi già predisposti in `Arena.jsx` e `EnemiesCard.jsx` (`isEnemyAttacking`, `isEnemyHit`).
+### ✅ Milestone 3: Enemy Intent & Telegrafo (Completata)
+- [x] Stato `enemyIntent` calcolato a inizio turno del giocatore e mostrato sopra `EnemiesCard` (icona attacco + valore danno o icona scudo).
+- [x] In `handleEndTurn`, eseguire la mossa già telegrafata in `enemyIntent` invece di estrarne una al buio.
+- [x] Generare il nuovo `enemyIntent` per il turno successivo dopo l'azione nemica.
+- [x] Attivare i feedback visivi già predisposti in `Arena.jsx` e `EnemiesCard.jsx` (`isEnemyAttacking`, `isEnemyHit`).
 
 ### 🔨 Milestone 4: Survival Mechanics (Durabilità & Munizioni)
 - [ ] **Allineamento Dati `cards.js`**:

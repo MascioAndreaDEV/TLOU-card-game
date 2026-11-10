@@ -30,6 +30,13 @@ function createRuntimeDeck(database) {
     }));
     return shuffleDeck(instances);
 }
+
+// === INIZIO SEZIONE: Helper Scelta Mossa Nemica (Enemy Intent) ===
+function getRandomEnemyMove(enemyData) {
+    const randomIndex = Math.floor(Math.random() * enemyData.moves.length);
+    return enemyData.moves[randomIndex];
+}
+// === FINE SEZIONE: Helper Scelta Mossa Nemica (Enemy Intent) ===
 // === FINE SEZIONE: Funzioni Helper Mazzo (Shuffle Fisher-Yates & Istanze Runtime) ===
 
 export default function Arena() {
@@ -53,6 +60,8 @@ export default function Arena() {
 
     const [discardPile, setDiscardPile] = useState([]);
 
+    const [enemyIntent, setEnemyIntent] = useState(() => getRandomEnemyMove(enemy));
+
     const [isEnemyAttacking, setIsEnemyAttacking] = useState(false);
 
     const [isEnemyHit, setIsEnemyHit] = useState(false);
@@ -71,27 +80,26 @@ export default function Arena() {
     }
     // === FINE SEZIONE: Gestione Scarto Singola Carta ===
 
-    //Logica Turno Nemico
-
+    // === INIZIO SEZIONE: Logica Turno Nemico con Risoluzione Intent ===
     function handleEnemyTurn() {
-        if (enemyHp > 0) {
+        if (enemyHp > 0 && enemyIntent) {
+            const mossaCorrente = enemyIntent;
 
-            const mossaCasualeNemico = Math.floor(Math.random() * enemy.moves.length)
+            setIsEnemyAttacking(true);
+            setTimeout(() => setIsEnemyAttacking(false), 350);
 
-            const prossimaMossaNemico = enemy.moves[mossaCasualeNemico]
-
-            console.log("il nemico esegue:", prossimaMossaNemico)
-
-
-            if (prossimaMossaNemico.damage > 0) {
-                shieldHandler(prossimaMossaNemico.damage, playerShield, setPlayerShield, playerHp, setPlayerHp)
+            if (mossaCorrente.damage > 0) {
+                shieldHandler(mossaCorrente.damage, playerShield, setPlayerShield, playerHp, setPlayerHp);
             }
-            if (prossimaMossaNemico.shield > 0) {
-                setEnemyShield(prev => prev + prossimaMossaNemico.shield)
+            if (mossaCorrente.shield > 0) {
+                setEnemyShield(prev => prev + mossaCorrente.shield);
             }
 
+            // Genera il prossimo intento per il turno successivo
+            setEnemyIntent(getRandomEnemyMove(enemy));
         }
     }
+    // === FINE SEZIONE: Logica Turno Nemico con Risoluzione Intent ===
 
     // === INIZIO SEZIONE: Pescata Inizio Turno, Retainable e Reshuffle Scarti ===
     function drawCards(targetHandSize = 5) {
@@ -157,6 +165,9 @@ export default function Arena() {
         setStamina(stamina - card.cost);
 
         if (card.effects.damage !== undefined && card.effects.damage > 0) {
+            setIsEnemyHit(true);
+            setTimeout(() => setIsEnemyHit(false), 300);
+
             if (card.effects.damage <= enemyShield) {
                 setEnemyShield(enemyShield - card.effects.damage)
             }
@@ -188,7 +199,15 @@ export default function Arena() {
     return (
         <div className="arena-container font- flex-1 flex flex-col items-center justify-between rounded-lg m-2 w-screen">
 
-            <EnemiesCard enemy={enemy} hpCorrenti={enemyHp} hpNemico={enemy.hp} scudo={enemyShield} isAttacking={false} isHit={false} />
+            <EnemiesCard
+                enemy={enemy}
+                hpCorrenti={enemyHp}
+                hpNemico={enemy.hp}
+                scudo={enemyShield}
+                isAttacking={isEnemyAttacking}
+                isHit={isEnemyHit}
+                intent={enemyIntent}
+            />
 
             <PlayerHUD characterName={character.name} characterImage={character.image} characterHp={character.hp} characterCurrentHp={playerHp} playerStamina={stamina} playerShield={playerShield} />
 
