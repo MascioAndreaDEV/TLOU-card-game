@@ -26,8 +26,8 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M1: Damage & Targeting Pipeline** | Correzione bersagli danno/scudo/cura, Win/Loss conditions, Turno Nemico base | 🟢 Completata | Completata |
 | **M2: Deck Engine & Piles** | Mazzo di pesca (`drawPile`), Scarti (`discardPile`), Rimescolamento, `retainable` | 🟢 Completata | Completata |
 | **M3: Enemy Intent & Telegrafo** | Visualizzazione mossa nemica preventiva (Intent), ciclo fine turno completo | 🟢 Completata | Completata |
-| **M4: Survival Mechanics** | Durabilità armi (`durability`), armi da fuoco e consumo munizioni (`ammoType`) | 🟡 In Corso | **Alta (Urgente)** |
-| **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | ⚪ Da Iniziare | Media |
+| **M4: Survival Mechanics** | Durabilità armi (`durability`), armi da fuoco e consumo munizioni (`ammoType`) | 🟢 Completata | Completata |
+| **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | 🟡 In Corso | **Alta (Urgente)** |
 | **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | ⚪ Da Iniziare | Media-Alta |
 | **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | ⚪ Da Iniziare | Media |
 
@@ -75,15 +75,15 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 - [x] Generare il nuovo `enemyIntent` per il turno successivo dopo l'azione nemica.
 - [x] Attivare i feedback visivi già predisposti in `Arena.jsx` e `EnemiesCard.jsx` (`isEnemyAttacking`, `isEnemyHit`).
 
-### 🔨 Milestone 4: Survival Mechanics (Durabilità & Munizioni)
-- [ ] **Allineamento Dati `cards.js`**:
-  - [ ] Aggiungere `ammoType` mancante alle carte munizione `ammo.12` (`'calibro.12'`), `Ammo.357` (`'calibro.357'`), `Ammo.308` (`'calibro.308'`).
-  - [ ] Collegare le immagini già presenti in `src/assets/img/` (`Cover.png`, `Schivata.png`) alle carte `cover` e `dodge`.
-- [ ] **Durabilità Armi/Oggetti**:
-  - [ ] Decrementare `durability` ad ogni utilizzo delle carte `retainable` / `weapon`.
-  - [ ] Scartare o distruggere la carta solo quando `durability` arriva a `0` (se `durability > 0`, la carta resta utilizzabile/in mano).
-- [ ] **Sistema Munizioni**:
-  - [ ] Controllare il requisito `ammoType` per le armi da fuoco prima di permettere la giocata e consumare la relativa risorsa munizione.
+### ✅ Milestone 4: Survival Mechanics (Durabilità & Munizioni) (Completata)
+- [x] **Allineamento Dati `cards.js`**:
+  - [x] Aggiungere `ammoType` mancante alle carte munizione `ammo.12` (`'calibro.12'`), `Ammo.357` (`'calibro.357'`), `Ammo.308` (`'calibro.308'`).
+  - [x] Collegare le immagini già presenti in `src/assets/img/` (`Cover.png`, `Schivata.png`) alle carte `cover` e `dodge`.
+- [x] **Durabilità Armi/Oggetti**:
+  - [x] Decrementare `durability` ad ogni utilizzo delle carte `retainable` / `weapon`.
+  - [x] Scartare o distruggere la carta solo quando `durability` arriva a `0` (se `durability > 0`, la carta resta utilizzabile/in mano).
+- [x] **Sistema Munizioni**:
+  - [x] Controllare il requisito `ammoType` per le armi da fuoco prima di permettere la giocata e consumare la relativa risorsa munizione (dalla riserva o direttamente dalla mano).
 
 ### 🩸 Milestone 5: Status Alterati
 - [ ] Spostare `enemy.status` e `character.status` nello stato runtime di `Arena.jsx` (evitando di mutare il blueprint statico).

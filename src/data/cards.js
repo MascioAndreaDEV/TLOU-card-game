@@ -1,4 +1,5 @@
-import bottle from '../assets/img/bottle.png'
+// === INIZIO SEZIONE: Import Asset Immagini Carte ===
+import bottle from '../assets/img/Bottle.png'
 import nineAmmo from '../assets/img/.9mmAmmo.png'
 import twelveAmmo from '../assets/img/.12Ammo.png'
 import thirty57Ammo from '../assets/img/.357Ammo.png'
@@ -8,10 +9,13 @@ import glock19 from '../assets/img/Glock.jpg'
 import huntingRifle from '../assets/img/.308Rifle.png'
 import mp5 from '../assets/img/MP5.png'
 import molotov from '../assets/img/Molotov.png'
-import spineWood from '../assets/img/spineWood.png'
+import spineWood from '../assets/img/SpineWood.png'
 import straccio from '../assets/img/straccio.png'
 import ascia from '../assets/img/Ascia.png'
 import shotgun from '../assets/img/.12Shotgun.png'
+import coverImg from '../assets/img/Cover.png'
+import dodgeImg from '../assets/img/Schivata.png'
+// === FINE SEZIONE: Import Asset Immagini Carte ===
 
 
 
@@ -49,18 +53,19 @@ export const CARD_DATABASE = [
 
     //-------------------------------------------------
 
-    // 2. carta: Copertura
-
+    // === INIZIO SEZIONE: Carta Cover (Copertura) ===
     {
         id: 'cover',
         cardType: 'action',
         retainable: false,
         name: 'cover',
         cost: 1,
+        img: coverImg,
         effects: {
             shield: 5,
         }
     },
+    // === FINE SEZIONE: Carta Cover (Copertura) ===
 
     //3.carta Melee Attacck --------------------------
 
@@ -71,6 +76,7 @@ export const CARD_DATABASE = [
         retainable: false,
         name: 'Melee',
         cost: 1,
+        img: ascia,
 
 
         effects: {
@@ -79,17 +85,19 @@ export const CARD_DATABASE = [
     },
 
 
-    //4.Carta Dodge -------------------------------------
+    // === INIZIO SEZIONE: Carta Dodge (Schivata) ===
     {
         id: 'dodge',
         cardType: 'defense',
         retainable: false,
         name: 'Dodge',
         cost: 0,
+        img: dodgeImg,
         effects: {
             shield: 4
         }
     },
+    // === FINE SEZIONE: Carta Dodge (Schivata) ===
 
     //carta mazza chiodata--------------------------------
     {
@@ -187,7 +195,7 @@ export const CARD_DATABASE = [
     },
 
 
-       //carta ammo 12 ------------------------------------------
+    // === INIZIO SEZIONE: Carta Munizioni Calibro .12 ===
     {
         id: 'ammo.12',
         cardType: 'ammo',
@@ -195,10 +203,11 @@ export const CARD_DATABASE = [
         name: 'Ammo.12',
         cost: 0,
         durability: 1,
+        ammoType: 'calibro.12',
         img: twelveAmmo,
         effects: {}
-
     },
+    // === FINE SEZIONE: Carta Munizioni Calibro .12 ===
 
    //carta ammo 9 ------------------------------------------
 
@@ -251,6 +260,7 @@ export const CARD_DATABASE = [
 
     },
 
+    // === INIZIO SEZIONE: Carte Munizioni Calibro .357 e .308 ===
     {
         id: 'Ammo.357',
         cardType: 'ammo',
@@ -258,10 +268,9 @@ export const CARD_DATABASE = [
         name: 'Ammo.357',
         cost: 0,
         durability: 1,
+        ammoType: 'calibro.357',
         img: thirty57Ammo,
-        effects: {
-
-        }
+        effects: {}
     },
 
     {
@@ -271,12 +280,11 @@ export const CARD_DATABASE = [
         name: 'Ammo.308',
         cost: 0,
         durability: 1,
+        ammoType: 'calibro.308',
         img: thirty08Ammo,
-        effects: {
-
-        }
-
+        effects: {}
     },
+    // === FINE SEZIONE: Carte Munizioni Calibro .357 e .308 ===
 
 
     {

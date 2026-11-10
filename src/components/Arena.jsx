@@ -60,6 +60,8 @@ export default function Arena() {
 
     const [discardPile, setDiscardPile] = useState([]);
 
+    const [ammoReserve, setAmmoReserve] = useState({});
+
     const [enemyIntent, setEnemyIntent] = useState(() => getRandomEnemyMove(enemy));
 
     const [isEnemyAttacking, setIsEnemyAttacking] = useState(false);
@@ -151,48 +153,108 @@ export default function Arena() {
         setStamina(3);
     }
 
-    // FUnzione unica gestioneGiocataCarta
-
+    // === INIZIO SEZIONE: Gestione Giocata Carta, Munizioni e Durabilità ===
     function handlePlayCard(card) {
-
         if (isBattleOver === true) {
-            return
+            return;
         }
 
         if (stamina < card.cost) {
-            return
+            return;
         }
-        setStamina(stamina - card.cost);
 
-        if (card.effects.damage !== undefined && card.effects.damage > 0) {
+        // 1. Verifica e consumo munizioni per armi da fuoco
+        let consumedHandAmmoKey = null;
+        if (card.cardType === 'weapon' && card.ammoType) {
+            const reserveCount = ammoReserve[card.ammoType] || 0;
+            const matchingAmmoCardInHand = hand.find(
+                c => c.cardType === 'ammo' && c.ammoType === card.ammoType
+            );
+
+            if (reserveCount <= 0 && !matchingAmmoCardInHand) {
+                return;
+            }
+
+            if (reserveCount > 0) {
+                setAmmoReserve(prev => ({
+                    ...prev,
+                    [card.ammoType]: prev[card.ammoType] - 1,
+                }));
+            } else if (matchingAmmoCardInHand) {
+                consumedHandAmmoKey = matchingAmmoCardInHand.instanceId || matchingAmmoCardInHand.id;
+            }
+        }
+
+        // 2. Pagamento costo Stamina
+        setStamina(prev => prev - card.cost);
+
+        // 3. Se è una carta munizione, ricarica la riserva del calibro corrispondente
+        if (card.cardType === 'ammo' && card.ammoType) {
+            setAmmoReserve(prev => ({
+                ...prev,
+                [card.ammoType]: (prev[card.ammoType] || 0) + 1,
+            }));
+        }
+
+        // 4. Risoluzione Danni, Scudo e Cura
+        if (card.effects?.damage !== undefined && card.effects.damage > 0) {
             setIsEnemyHit(true);
             setTimeout(() => setIsEnemyHit(false), 300);
 
             if (card.effects.damage <= enemyShield) {
-                setEnemyShield(enemyShield - card.effects.damage)
-            }
-            else if (card.effects.damage > enemyShield) {
-                setEnemyShield(0)
-
-                const dannoResiduo = card.effects.damage - enemyShield
-
-                setEnemyHp(Math.max(0, enemyHp - dannoResiduo))
+                setEnemyShield(enemyShield - card.effects.damage);
+            } else {
+                setEnemyShield(0);
+                const dannoResiduo = card.effects.damage - enemyShield;
+                setEnemyHp(Math.max(0, enemyHp - dannoResiduo));
             }
         }
 
-        if (card.effects.shield !== undefined && card.effects.shield > 0) {
-            setPlayerShield(playerShield + card.effects.shield)
+        if (card.effects?.shield !== undefined && card.effects.shield > 0) {
+            setPlayerShield(playerShield + card.effects.shield);
         }
 
-        if (card.effects.heal !== undefined && card.effects.heal > 0) {
-            setPlayerHp(Math.min(character.hp, playerHp + card.effects.heal))
+        if (card.effects?.heal !== undefined && card.effects.heal > 0) {
+            setPlayerHp(Math.min(character.hp, playerHp + card.effects.heal));
         }
 
-        handleDiscard(card);
+        // 5. Gestione Durabilità e Scarto
+        const targetKey = card.instanceId || card.id;
+        const hasRemainingDurability = card.durability !== undefined && card.durability > 1;
 
-        setDiscardPile(discardPile => [...discardPile, card])
+        setHand(prevHand => {
+            let nextHand = prevHand.filter(c => (c.instanceId || c.id) !== consumedHandAmmoKey);
+            if (hasRemainingDurability) {
+                return nextHand.map(c =>
+                    (c.instanceId || c.id) === targetKey
+                        ? { ...c, durability: c.durability - 1 }
+                        : c
+                );
+            }
+            return nextHand.filter(c => (c.instanceId || c.id) !== targetKey);
+        });
 
+        setDiscardPile(prevDiscard => {
+            const newDiscards = [...prevDiscard];
+            if (consumedHandAmmoKey) {
+                const usedAmmoCard = hand.find(c => (c.instanceId || c.id) === consumedHandAmmoKey);
+                if (usedAmmoCard) {
+                    newDiscards.push({
+                        ...usedAmmoCard,
+                        durability: usedAmmoCard.maxDurability ?? usedAmmoCard.durability,
+                    });
+                }
+            }
+            if (!hasRemainingDurability) {
+                newDiscards.push({
+                    ...card,
+                    durability: card.maxDurability ?? card.durability,
+                });
+            }
+            return newDiscards;
+        });
     }
+    // === FINE SEZIONE: Gestione Giocata Carta, Munizioni e Durabilità ===
 
 
 
@@ -209,7 +271,15 @@ export default function Arena() {
                 intent={enemyIntent}
             />
 
-            <PlayerHUD characterName={character.name} characterImage={character.image} characterHp={character.hp} characterCurrentHp={playerHp} playerStamina={stamina} playerShield={playerShield} />
+            <PlayerHUD
+                characterName={character.name}
+                characterImage={character.image}
+                characterHp={character.hp}
+                characterCurrentHp={playerHp}
+                playerStamina={stamina}
+                playerShield={playerShield}
+                ammoReserve={ammoReserve}
+            />
 
             {/*Player Hand meglio in HUD ???*/}
 
