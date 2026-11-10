@@ -5,9 +5,10 @@
 import { GiClaws, GiShield, GiSkullCrossedBones } from 'react-icons/gi';
 // === FINE SEZIONE: Import Icone per Intent e Status Nemico ===
 
-// === INIZIO SEZIONE: Componente Carta Nemico con Telegrafo Intent ===
-export default function EnemiesCard({ enemy, hpCorrenti, scudo, isAttacking, isHit, intent }) {
+// === INIZIO SEZIONE: Componente Carta Nemico con Telegrafo Intent e Status Runtime ===
+export default function EnemiesCard({ enemy, hpCorrenti, scudo, isAttacking, isHit, intent, status }) {
 
+    const activeStatus = status || enemy.status;
     const hpPercentage = Math.max(0, (hpCorrenti / enemy.hp) * 100);
 
     return (
@@ -63,26 +64,35 @@ export default function EnemiesCard({ enemy, hpCorrenti, scudo, isAttacking, isH
                         </div>
                     ) : null}
 
-                    {enemy.status.isBleeding && (
-                        <div className="flex items-center justify-center">
-                            <h4>Sanguina</h4>
-                        </div>
-                    )}
-                    {enemy.status.isStun && (
-                        <div className="flex items-center justify-center">
-                            <h4>Stordito</h4>
-                        </div>
-                    )}
-                    {enemy.status.isPoisoned && (
-                        <div className="flex items-center justify-center">
-                            <h4>Avvelenato</h4>
-                        </div>
-                    )}
-                    {enemy.status.isDismember && (
-                        <div className="flex items-center justify-center">
-                            <h4>Mutilato</h4>
-                        </div>
-                    )}
+                    {/* === INIZIO SEZIONE: Badge Status Alterati Nemico === */}
+                    <div className="flex flex-wrap items-center justify-center gap-1 mt-1">
+                        {activeStatus.isBleeding && (
+                            <span className="px-2 py-0.5 text-xs rounded bg-red-950 border border-red-500 text-red-300">
+                                🩸 Sanguina ({activeStatus.bleedDuration ?? 1}t)
+                            </span>
+                        )}
+                        {activeStatus.isStun && (
+                            <span className="px-2 py-0.5 text-xs rounded bg-amber-950 border border-amber-400 text-amber-300">
+                                💫 Stordito
+                            </span>
+                        )}
+                        {activeStatus.isPoisoned && (
+                            <span className="px-2 py-0.5 text-xs rounded bg-emerald-950 border border-emerald-500 text-emerald-300">
+                                ☣️ Avvelenato
+                            </span>
+                        )}
+                        {activeStatus.isDismember && (
+                            <span className="px-2 py-0.5 text-xs rounded bg-purple-950 border border-purple-400 text-purple-300">
+                                🦴 Mutilato (-25% ATK)
+                            </span>
+                        )}
+                        {activeStatus.burnDuration > 0 && (
+                            <span className="px-2 py-0.5 text-xs rounded bg-orange-950 border border-orange-500 text-orange-300">
+                                🔥 Ustione ({activeStatus.burnDuration}t)
+                            </span>
+                        )}
+                    </div>
+                    {/* === FINE SEZIONE: Badge Status Alterati Nemico === */}
                 </div>
             </div>
         </div>

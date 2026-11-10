@@ -27,8 +27,8 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M2: Deck Engine & Piles** | Mazzo di pesca (`drawPile`), Scarti (`discardPile`), Rimescolamento, `retainable` | 🟢 Completata | Completata |
 | **M3: Enemy Intent & Telegrafo** | Visualizzazione mossa nemica preventiva (Intent), ciclo fine turno completo | 🟢 Completata | Completata |
 | **M4: Survival Mechanics** | Durabilità armi (`durability`), armi da fuoco e consumo munizioni (`ammoType`) | 🟢 Completata | Completata |
-| **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | 🟡 In Corso | **Alta (Urgente)** |
-| **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | ⚪ Da Iniziare | Media-Alta |
+| **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | 🟢 Completata | Completata |
+| **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | 🟡 In Corso | **Alta (Urgente)** |
 | **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | ⚪ Da Iniziare | Media |
 
 *Legenda: 🟢 Completata | 🟡 In Corso | ⚪ Da Iniziare | 🔴 Bloccata*
@@ -85,11 +85,11 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 - [x] **Sistema Munizioni**:
   - [x] Controllare il requisito `ammoType` per le armi da fuoco prima di permettere la giocata e consumare la relativa risorsa munizione (dalla riserva o direttamente dalla mano).
 
-### 🩸 Milestone 5: Status Alterati
-- [ ] Spostare `enemy.status` e `character.status` nello stato runtime di `Arena.jsx` (evitando di mutare il blueprint statico).
-- [ ] **Stun (`isStun`)**: Se il nemico è stordito, salta il proprio turno e rimuove lo status a fine turno nemico.
-- [ ] **Bleed (`isBleeding`) & Poison (`isPoisoned`)**: Danno periodico a inizio/fine turno e decremento di `duration`.
-- [ ] **Cleanse**: Rimozione degli status negativi (es. giocando `MedKit`).
+### ✅ Milestone 5: Status Alterati (Completata)
+- [x] Spostare `enemy.status` e `character.status` nello stato runtime di `Arena.jsx` (evitando di mutare il blueprint statico).
+- [x] **Stun (`isStun`)**: Se il nemico è stordito, salta il proprio turno e rimuove lo status a fine turno nemico.
+- [x] **Bleed (`isBleeding`), Burn & Poison (`isPoisoned`)**: Danno periodico a inizio/fine turno e decremento di `duration`.
+- [x] **Cleanse**: Rimozione degli status negativi (es. giocando `MedKit`).
 
 ### 🎨 Milestone 6: UI/UX, Card Fanning & Visual Arena
 - [ ] Implementazione disposizione a ventaglio per la mano (`PlayerHand.jsx`) con rotazione e traslazione ad arco.
