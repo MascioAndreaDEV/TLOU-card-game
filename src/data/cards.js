@@ -29,6 +29,11 @@ import huntingBowImg from '../assets/img/HuntingBow.jpg'
 import macheteImg from '../assets/img/Machete.jpg'
 import shortyImg from '../assets/img/Shorty.jpg'
 import flamethrowerImg from '../assets/img/Flamethrower.jpg'
+import fedraVestImg from '../assets/img/FedraVest.jpg'
+import cannedRationImg from '../assets/img/CannedRation.jpg'
+import elDiabloImg from '../assets/img/ElDiablo.jpg'
+import desperateSprintImg from '../assets/img/DesperateSprint.jpg'
+import seraphiteHammerImg from '../assets/img/SeraphiteHammer.jpg'
 // === FINE SEZIONE: Import Asset Immagini Carte ===
 
 
@@ -565,6 +570,92 @@ export const CARD_DATABASE = [
             damage: 15,
             burnDamage: 5 * 3,
         }
-    }
+    },
     // === FINE SEZIONE: Carta Lanciafiamme (Flamethrower) ===
+
+    // === INIZIO SEZIONE: Carta Corazza Tattica FEDRA (FEDRA Vest) ===
+    {
+        id: 'fedra_vest',
+        cardType: 'defense',
+        tier: 'uncommon',
+        retainable: false,
+        name: 'FEDRA Vest',
+        cost: 2,
+        img: fedraVestImg,
+        effects: {
+            shield: 15,
+        }
+    },
+    // === FINE SEZIONE: Carta Corazza Tattica FEDRA (FEDRA Vest) ===
+
+    // === INIZIO SEZIONE: Carta Razione di Sopravvivenza (Canned Ration) ===
+    {
+        id: 'canned_ration',
+        cardType: 'utility',
+        tier: 'common',
+        retainable: true,
+        durability: 1,
+        name: 'Canned Ration',
+        cost: 0,
+        img: cannedRationImg,
+        effects: {
+            heal: 6,
+            draw: 1,
+        }
+    },
+    // === FINE SEZIONE: Carta Razione di Sopravvivenza (Canned Ration) ===
+
+    // === INIZIO SEZIONE: Carta El Diablo (Pistola da Caccia .357 Ottica) ===
+    {
+        id: 'el_diablo',
+        cardType: 'weapon',
+        tier: 'rare',
+        retainable: true,
+        durability: 3,
+        ammoType: 'calibro.357',
+        name: 'El Diablo',
+        cost: 1,
+        img: elDiabloImg,
+        effects: {
+            damage: 22,
+            pierceShield: true,
+            bleedChance: 1,
+        }
+    },
+    // === FINE SEZIONE: Carta El Diablo (Pistola da Caccia .357 Ottica) ===
+
+    // === INIZIO SEZIONE: Carta Scatto Disperato (Desperate Sprint) ===
+    {
+        id: 'desperate_sprint',
+        cardType: 'action',
+        tier: 'common',
+        retainable: false,
+        name: 'Desperate Sprint',
+        cost: 0,
+        img: desperateSprintImg,
+        effects: {
+            selfDamage: 2,
+            staminaGain: 2,
+            draw: 1,
+        }
+    },
+    // === FINE SEZIONE: Carta Scatto Disperato (Desperate Sprint) ===
+
+    // === INIZIO SEZIONE: Carta Martello dei Serafiti (Seraphite Hammer) ===
+    {
+        id: 'seraphite_hammer',
+        cardType: 'weapon',
+        tier: 'rare',
+        retainable: true,
+        durability: 3,
+        name: 'Seraphite Hammer',
+        cost: 2,
+        img: seraphiteHammerImg,
+        effects: {
+            damage: 18,
+            pierceShield: true,
+            dismemberChance: 0.5,
+        }
+    }
+    // === FINE SEZIONE: Carta Martello dei Serafiti (Seraphite Hammer) ===
 ]

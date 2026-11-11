@@ -4,6 +4,7 @@ import tommy from '../assets/img/Tommy.jpg';
 import ellie from '../assets/img/Ellie.jpg';
 import dina from '../assets/img/Dina.jpg';
 import abby from '../assets/img/Abby.jpg';
+import lev from '../assets/img/Lev.jpg';
 // === FINE SEZIONE: Import Immagini Personaggi ===
 
 
@@ -69,13 +70,16 @@ export const CHARACTERS_DATABASE = [
     },
 
 
+    // === INIZIO SEZIONE: Personaggio Lev ===
     {
         id: 'Lev',
         name: 'Lev',
         hp: 65,
+        image: lev,
         status: {
             isStun: false,
             isBleeding: false,
         },
     }
+    // === FINE SEZIONE: Personaggio Lev ===
 ]

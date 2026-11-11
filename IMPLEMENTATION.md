@@ -30,9 +30,9 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M5: Status Alterati** | Meccaniche Stun, Bleed, Poison, Dismember e Cleanse | 🟢 Completata | Completata |
 | **M6: UI/UX & Card Fanning** | Disposizione a ventaglio mano carte, animazioni di impatto, visual Arena | 🟢 Completata | Completata |
 | **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | 🟢 Completata | Completata |
-| **M8: Card Pool Expansion & Crafting** | Nuove carte lore TLOU (27 carte totali), rarità (`starter`/`loot`), Crafting e nuovi effetti | 🟢 Completata | Completata |
-| **M9: Main Menu & Compendium Hub** | Menu principale (`Nuova Partita`, `Compendio`), filtri categoria/rarità e Deckbuilder | 🟡 In Corso | **Alta (Urgente)** |
-| **M10: Event Map & Draft Rewards** | Mappa a nodi/eventi (Scontri, Scavenging, Rifugio, Boss) e scelta ricompensa 1-su-3 | ⚪ Da Iniziare | Media-Alta |
+| **M8: Card Pool & Bestiary Expansion** | Espansione a 32 carte TLOU, 6 Sopravvissuti completi e 9 Minacce Nemiche | 🟢 Completata | Completata |
+| **M9: Main Menu & Compendium Hub** | Menu principale (`Nuova Partita`, `Riprendi`, `Compendio`), filtri categoria/rarità e Bestiario | 🟢 Completata | Completata |
+| **M10: Event Map & Draft Rewards** | Mappa a nodi/eventi (Scontri, Scavenging, Rifugio, Boss) e scelta ricompensa 1-su-3 | 🟡 In Corso | **Alta (Urgente)** |
 | **M11: Full Run & Loadout Integration** | Collegamento completo Starter Deck, Sopravvissuto e progressione Run nell'Arena | ⚪ Da Iniziare | Media-Alta |
 
 *Legenda: 🟢 Completata | 🟡 In Corso | ⚪ Da Iniziare | 🔴 Bloccata*
@@ -128,15 +128,23 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
   - [x] `Integratori / Pillole (Supplements)` — Guadagno Stamina immediato (`staminaGain: 2`) + piccola cura.
   - [x] `Arco da Caccia (Hunting Bow)` — Colpo silenzioso che ignora lo scudo nemico (`pierceShield: true`).
 - [x] **Separazione `tier` (`starter` vs `common`/`uncommon`/`rare`)** e collegamento nel `useCombatEngine` di `bonusStunDamage`, `bonusBleedDamage`, `pierceShield`, `selfDamage`, `staminaGain`, `draw`, `craftOnly` e Crafting in-hand (`CRAFT_CARD`).
-- [x] **Seconda Ondata Carte Extra Lore TLOU**:
+- [x] **Seconda & Terza Ondata Carte Extra Lore TLOU (32 Carte Totali)**:
   - [x] `Machete` — Arma da taglio pesante con bonus danni contro nemici sanguinanti (`bonusBleedDamage`).
   - [x] `Fucile a Canne Mozze (Shorty)` — Arma compatta `.12` ad alto impatto ravvicinato (`cost: 0`).
   - [x] `Lanciafiamme (Flamethrower)` — Arma speciale che applica ustione estrema (`burnDamage: 15`).
+  - [x] `Corazza Tattica FEDRA (FEDRA Vest)` — Difesa pesante non-retainable (`cost: 2`, `shield: 15`).
+  - [x] `Razione di Sopravvivenza (Canned Ration)` — Cura + pescata (`cost: 0`, `heal: 6`, `draw: 1`).
+  - [x] `El Diablo` — Pistola da caccia `.357` con mirino ottico (`damage: 22`, `pierceShield: true`, `bleedChance: 1`).
+  - [x] `Scatto Disperato (Desperate Sprint)` — Azione ad adrenalina (`cost: 0`, `selfDamage: 2`, `staminaGain: 2`, `draw: 1`).
+  - [x] `Martello dei Serafiti (Seraphite Hammer)` — Arma pesante (`cost: 2`, `durability: 3`, `damage: 18`, `pierceShield: true`, `dismemberChance: 0.5`).
+- [x] **Espansione Ritratti Sopravvissuti & Bestiario Nemici (`Characters.js` & `enemies.js`)**:
+  - [x] Generato e collegato ritratto `Lev.jpg` per **Lev** (6/6 Sopravvissuti completi).
+  - [x] Generati e collegati ritratti `Runner.jpg`, `Stalker.jpg`, `WlfGuardDog.jpg`, `WlfSoldier.jpg`, `WlfEnforcer.jpg`, `SeraphiteBrute.jpg` e aggiunti i nuovi nemici (**WLF Guard Dog**, **WLF Soldier**, **WLF Enforcer**, **Seraphite Brute**, **Shambler** — 9 Nemici totali; da generare `Bloater.jpg` e `Shambler.jpg` al reset quota immagini).
 
-### 🏠 Milestone 9: Main Menu & Compendium Hub
-- [x] Barra di navigazione in `AppHeader.jsx` e filtri categoria/ricerca base in `Compendium.jsx`.
-- [ ] Creazione schermata **Main Menu** (`Nuova Partita / Run`, `Compendio & Workbench`, `Continua Run`).
-- [ ] Espansione `Compendium.jsx` per mostrare il badge rarità (`Starter` vs `Ottenibile`), gli Infetti e i Sopravvissuti.
+### ✅ Milestone 9: Main Menu & Compendium Hub (Completata)
+- [x] Barra di navigazione in `AppHeader.jsx` e gestione viste in `App.jsx` con preservazione dello scontro attivo in background.
+- [x] Creazione schermata **Main Menu** (`MainMenu.jsx`) con pulsanti `Nuova Partita`, `Riprendi Scontro`, `Compendio` e contatori dinamici.
+- [x] Espansione `Compendium.jsx` con 3 tab (**Carte (32)**, **Sopravvissuti (6)**, **Minacce (9)**), filtri per tipo/rarità/crafting, ricerca testuale e pattern mosse nemiche.
 
 ### 🗺️ Milestone 10: Mappa di Gioco ad Eventi & Ricompense (Draft)
 - [ ] Mappa a bivi della Zona di Quarantena con nodi: **Scontro Infetto**, **Evento Scavenging** (Farmacia, Cassa FEDRA, Banco da Lavoro), **Rifugio / Falò** (Cura o Rimozione carta) e **Boss Finale (Bloater)**.
