@@ -80,7 +80,7 @@ export function getAvailableCrafts(hand, cardDatabase) {
 }
 // === FINE SEZIONE: Funzioni Pure Helper (Shuffle Fisher-Yates, Deck Runtime, Intent, Pescata) ===
 
-// === INIZIO SEZIONE: Inizializzatore Stato Combattimento ===
+// === INIZIO SEZIONE: Inizializzatore Stato Combattimento con Passive Eroe (Joel & Lev) ===
 function createInitialCombatState({ character, enemy, cardDatabase, initialPlayerHp }) {
     const deck = createRuntimeDeck(cardDatabase);
     const startingHp =
@@ -88,14 +88,19 @@ function createInitialCombatState({ character, enemy, cardDatabase, initialPlaye
             ? Math.min(character.hp, initialPlayerHp)
             : character.hp;
 
+    // Passiva Lev: Pesca 6 carte invece di 5 nel Turno 1
+    const firstTurnHandSize = character?.id === 'Lev' ? 6 : 5;
+    // Passiva Joel: Inizia ogni scontro con +4 Scudo
+    const initialShield = character?.id === 'Joel' ? 4 : 0;
+
     return {
         enemyHp: enemy.hp,
         playerHp: startingHp,
         stamina: 3,
         enemyShield: 0,
-        playerShield: 0,
-        hand: deck.slice(0, 5),
-        drawPile: deck.slice(5),
+        playerShield: initialShield,
+        hand: deck.slice(0, firstTurnHandSize),
+        drawPile: deck.slice(firstTurnHandSize),
         discardPile: [],
         ammoReserve: {},
         enemyStatus: {
@@ -116,7 +121,7 @@ function createInitialCombatState({ character, enemy, cardDatabase, initialPlaye
         enemyIntent: getRandomEnemyMove(enemy),
     };
 }
-// === FINE SEZIONE: Inizializzatore Stato Combattimento ===
+// === FINE SEZIONE: Inizializzatore Stato Combattimento con Passive Eroe (Joel & Lev) ===
 
 // === INIZIO SEZIONE: Combat Reducer (Macchina a Stati Immutabile) ===
 function combatReducer(state, action) {
@@ -149,70 +154,89 @@ function combatReducer(state, action) {
                 }
             }
 
-            // 2. Se è una carta munizione, ricarica la riserva
+            // 2. Ricarica munizioni se la carta è di tipo 'ammo' o ha grantAmmo
             if (card.cardType === 'ammo' && card.ammoType) {
                 nextAmmoReserve[card.ammoType] = (nextAmmoReserve[card.ammoType] || 0) + 1;
             }
+            if (card.effects?.grantAmmo) {
+                const caliber = card.effects.grantAmmo;
+                nextAmmoReserve[caliber] = (nextAmmoReserve[caliber] || 0) + 1;
+            }
 
-            // 3. Pipeline Danni (con bonusStunDamage e pierceShield), Scudo, Cura e selfDamage
+            // 3. Pipeline Danni, Bonus Passivi Eroe, Scudo e Cure
             let nextEnemyShield = state.enemyShield;
             let nextEnemyHp = state.enemyHp;
             let nextPlayerShield = state.playerShield;
             let nextPlayerHp = state.playerHp;
 
-            if (card.effects?.damage !== undefined && card.effects.damage > 0) {
-                let totalDamage = card.effects.damage;
-                if (card.effects.bonusStunDamage && state.enemyStatus.isStun) {
-                    totalDamage += card.effects.bonusStunDamage;
+            if (card.effects) {
+                if (card.effects.damage) {
+                    let totalDamage = card.effects.damage;
+
+                    // Passiva Tommy: +3 Danni con armi da fuoco
+                    if (character?.id === 'Tommy' && card.cardType === 'weapon' && card.ammoType) {
+                        totalDamage += 3;
+                    }
+                    // Passiva Abby: +2 Danni con carte Attacco corpo a corpo
+                    if (character?.id === 'Abby' && card.cardType === 'attack') {
+                        totalDamage += 2;
+                    }
+
+                    if (card.effects.bonusStunDamage && state.enemyStatus.isStun) {
+                        totalDamage += card.effects.bonusStunDamage;
+                    }
+                    if (card.effects.bonusBleedDamage && state.enemyStatus.isBleeding) {
+                        totalDamage += card.effects.bonusBleedDamage;
+                    }
+
+                    if (card.effects.pierceShield) {
+                        nextEnemyHp = Math.max(0, nextEnemyHp - totalDamage);
+                    } else if (totalDamage > nextEnemyShield) {
+                        const restDamage = totalDamage - nextEnemyShield;
+                        nextEnemyShield = 0;
+                        nextEnemyHp = Math.max(0, nextEnemyHp - restDamage);
+                    } else {
+                        nextEnemyShield -= totalDamage;
+                    }
                 }
-                if (card.effects.bonusBleedDamage && state.enemyStatus.isBleeding) {
-                    totalDamage += card.effects.bonusBleedDamage;
+
+                if (card.effects.selfDamage) {
+                    nextPlayerHp = Math.max(1, nextPlayerHp - card.effects.selfDamage);
                 }
 
-                if (card.effects.pierceShield) {
-                    nextEnemyHp = Math.max(0, nextEnemyHp - totalDamage);
-                } else if (totalDamage <= nextEnemyShield) {
-                    nextEnemyShield -= totalDamage;
-                } else {
-                    const dannoResiduo = totalDamage - nextEnemyShield;
-                    nextEnemyShield = 0;
-                    nextEnemyHp = Math.max(0, nextEnemyHp - dannoResiduo);
+                if (card.effects.shield) {
+                    nextPlayerShield += card.effects.shield;
+                }
+
+                if (card.effects.heal) {
+                    nextPlayerHp = Math.min(character.hp, nextPlayerHp + card.effects.heal);
                 }
             }
 
-            if (card.effects?.selfDamage > 0) {
-                nextPlayerHp = Math.max(0, nextPlayerHp - card.effects.selfDamage);
-            }
-
-            if (card.effects?.shield !== undefined && card.effects.shield > 0) {
-                nextPlayerShield += card.effects.shield;
-            }
-
-            if (card.effects?.heal !== undefined && card.effects.heal > 0) {
-                nextPlayerHp = Math.min(character.hp, nextPlayerHp + card.effects.heal);
-            }
-
-            // 4. Status Alterati da Carta Giocata
+            // 4. Risoluzione Status Alterati inflitti o curati dalla carta
             let nextEnemyStatus = { ...state.enemyStatus };
             let nextPlayerStatus = { ...state.playerStatus };
 
-            if (card.effects) {
+            if (card.effects && nextEnemyHp > 0) {
                 if (card.effects.stun) {
                     nextEnemyStatus.isStun = true;
                 }
                 if (card.effects.bleedChance && Math.random() < card.effects.bleedChance) {
                     nextEnemyStatus.isBleeding = true;
-                    nextEnemyStatus.bleedDuration = 3;
+                    nextEnemyStatus.bleedDuration = 2;
                     nextEnemyStatus.bleedDamage = 3;
                 }
                 if (card.effects.dismemberChance && Math.random() < card.effects.dismemberChance) {
                     nextEnemyStatus.isDismember = true;
                 }
                 if (card.effects.burnDamage) {
-                    nextEnemyStatus.burnDuration = 3;
-                    nextEnemyStatus.burnDamage = Math.max(1, Math.round(card.effects.burnDamage / 3));
+                    nextEnemyStatus.burnDuration = 2;
+                    nextEnemyStatus.burnDamage = Math.max(3, Math.round(card.effects.burnDamage / 3));
                 }
-                if (card.effects.cleanse) {
+            }
+
+            if (card.effects?.cleanse) {
+                if (Array.isArray(card.effects.cleanse)) {
                     if (card.effects.cleanse.includes('bleed')) {
                         nextPlayerStatus.isBleeding = false;
                         nextPlayerStatus.bleedDuration = 0;
@@ -289,7 +313,7 @@ function combatReducer(state, action) {
         }
 
         case 'CRAFT_CARD': {
-            const { targetTemplate } = action.payload;
+            const { targetTemplate, character } = action.payload;
             const isBattleOver = state.enemyHp <= 0 || state.playerHp <= 0;
             if (isBattleOver || !Array.isArray(targetTemplate?.recipe)) {
                 return state;
@@ -326,15 +350,19 @@ function combatReducer(state, action) {
                 { ...secondMat, durability: secondMat.maxDurability ?? secondMat.durability },
             ];
 
+            // Passiva Dina: +4 Scudo ogni volta che assembla una carta
+            const craftShieldBonus = character?.id === 'Dina' ? 4 : 0;
+
             return {
                 ...state,
+                playerShield: state.playerShield + craftShieldBonus,
                 hand: nextHand,
                 discardPile: nextDiscardPile,
             };
         }
 
         case 'END_TURN': {
-            const { enemy } = action.payload;
+            const { enemy, character } = action.payload;
             if (state.enemyHp <= 0 || state.playerHp <= 0) {
                 return state;
             }
@@ -387,7 +415,8 @@ function combatReducer(state, action) {
                                 nextPlayerStatus.bleedDuration = eff.duration || 2;
                                 nextPlayerStatus.bleedDamage = eff.damageBleeding || 2;
                             }
-                            if (eff.isPoisoned) {
+                            // Passiva Ellie: Immune al Veleno/Spore
+                            if (eff.isPoisoned && character?.id !== 'Ellie') {
                                 nextPlayerStatus.isPoisoned = true;
                                 nextPlayerStatus.poisonDuration = eff.duration || 2;
                                 nextPlayerStatus.poisonDamage = eff.damagePoison || 2;
@@ -414,19 +443,25 @@ function combatReducer(state, action) {
             nextEnemyStatus.burnDuration = Math.max(0, nextEnemyStatus.burnDuration - 1);
 
             const nextPlayerBleed = Math.max(0, nextPlayerStatus.bleedDuration - 1);
-            const nextPlayerPoison = Math.max(0, nextPlayerStatus.poisonDuration - 1);
             nextPlayerStatus.bleedDuration = nextPlayerBleed;
             nextPlayerStatus.isBleeding = nextPlayerBleed > 0;
+
+            const nextPlayerPoison = Math.max(0, nextPlayerStatus.poisonDuration - 1);
             nextPlayerStatus.poisonDuration = nextPlayerPoison;
             nextPlayerStatus.isPoisoned = nextPlayerPoison > 0;
 
-            // 5. Pescata carte per il nuovo turno e ricarica Stamina
-            const { hand, drawPile, discardPile } = drawUpToTarget(
-                state.hand,
-                state.drawPile,
-                state.discardPile,
-                5
-            );
+            // 5. Scarto mano e pescata nuovo turno (se la battaglia continua)
+            const isBattleOverNow = nextEnemyHp <= 0 || nextPlayerHp <= 0;
+            let hand = state.hand;
+            let drawPile = state.drawPile;
+            let discardPile = state.discardPile;
+
+            if (!isBattleOverNow) {
+                const drawn = drawUpToTarget(state.hand, state.drawPile, state.discardPile, 5);
+                hand = drawn.hand;
+                drawPile = drawn.drawPile;
+                discardPile = drawn.discardPile;
+            }
 
             return {
                 ...state,
@@ -454,7 +489,7 @@ function combatReducer(state, action) {
 }
 // === FINE SEZIONE: Combat Reducer (Macchina a Stati Immutabile) ===
 
-// === INIZIO SEZIONE: Custom Hook useCombatEngine ===
+// === INIZIO SEZIONE: Custom Hook useCombatEngine con Floating Combat Text ===
 export function useCombatEngine({
     character,
     enemy,
@@ -470,18 +505,44 @@ export function useCombatEngine({
 
     const [isEnemyAttacking, setIsEnemyAttacking] = useState(false);
     const [isEnemyHit, setIsEnemyHit] = useState(false);
+    const [floatingTexts, setFloatingTexts] = useState([]);
 
     const isVictory = state.enemyHp <= 0;
     const isGameOver = state.playerHp <= 0;
     const isBattleOver = isVictory || isGameOver;
     const availableCrafts = getAvailableCrafts(state.hand, allCardsDatabase);
 
+    function spawnFloatingText(text, colorClass = 'text-amber-300', target = 'enemy') {
+        const id = `${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+        setFloatingTexts(prev => [...prev, { id, text, colorClass, target }]);
+        setTimeout(() => {
+            setFloatingTexts(prev => prev.filter(item => item.id !== id));
+        }, 1150);
+    }
+
     function handlePlayCard(card) {
         if (isBattleOver || state.stamina < card.cost || card.craftOnly) return;
 
         if (card.effects?.damage > 0) {
+            let bonus = 0;
+            if (character?.id === 'Tommy' && card.cardType === 'weapon' && card.ammoType) bonus += 3;
+            if (character?.id === 'Abby' && card.cardType === 'attack') bonus += 2;
+            if (card.effects.bonusStunDamage && state.enemyStatus.isStun) bonus += card.effects.bonusStunDamage;
+            if (card.effects.bonusBleedDamage && state.enemyStatus.isBleeding) bonus += card.effects.bonusBleedDamage;
+            const totalDmg = card.effects.damage + bonus;
+
             setIsEnemyHit(true);
-            setTimeout(() => setIsEnemyHit(false), 300);
+            setTimeout(() => setIsEnemyHit(false), 320);
+            spawnFloatingText(`-${totalDmg} HP`, 'text-rose-400', 'enemy');
+        }
+        if (card.effects?.shield > 0) {
+            spawnFloatingText(`+${card.effects.shield} Scudo`, 'text-sky-400', 'player');
+        }
+        if (card.effects?.heal > 0) {
+            spawnFloatingText(`+${card.effects.heal} HP`, 'text-emerald-400', 'player');
+        }
+        if (card.effects?.stun) {
+            spawnFloatingText(`STORDITO!`, 'text-amber-300', 'enemy');
         }
 
         dispatch({
@@ -492,9 +553,16 @@ export function useCombatEngine({
 
     function handleCraftCard(targetTemplate) {
         if (isBattleOver) return;
+        spawnFloatingText(
+            character?.id === 'Dina'
+                ? `🛠️ ${targetTemplate.name} (+4 Scudo)`
+                : `🛠️ ${targetTemplate.name}!`,
+            'text-amber-300',
+            'player'
+        );
         dispatch({
             type: 'CRAFT_CARD',
-            payload: { targetTemplate },
+            payload: { targetTemplate, character },
         });
     }
 
@@ -503,18 +571,24 @@ export function useCombatEngine({
 
         if (!state.enemyStatus.isStun && state.enemyHp > 0) {
             setIsEnemyAttacking(true);
-            setTimeout(() => setIsEnemyAttacking(false), 350);
+            setTimeout(() => setIsEnemyAttacking(false), 380);
+            if (state.enemyIntent?.damage > 0) {
+                spawnFloatingText(`-${state.enemyIntent.damage} HP`, 'text-red-500', 'player');
+            } else if (state.enemyIntent?.shield > 0) {
+                spawnFloatingText(`+${state.enemyIntent.shield} Scudo`, 'text-sky-300', 'enemy');
+            }
         }
 
         dispatch({
             type: 'END_TURN',
-            payload: { enemy },
+            payload: { enemy, character },
         });
     }
 
     function handleRestartBattle() {
         setIsEnemyAttacking(false);
         setIsEnemyHit(false);
+        setFloatingTexts([]);
         dispatch({
             type: 'RESTART_BATTLE',
             payload: { character, enemy, cardDatabase, initialPlayerHp },
@@ -524,6 +598,7 @@ export function useCombatEngine({
     return {
         ...state,
         availableCrafts,
+        floatingTexts,
         isEnemyAttacking,
         isEnemyHit,
         isVictory,
@@ -535,4 +610,4 @@ export function useCombatEngine({
         handleRestartBattle,
     };
 }
-// === FINE SEZIONE: Custom Hook useCombatEngine ===
+// === FINE SEZIONE: Custom Hook useCombatEngine con Floating Combat Text ===

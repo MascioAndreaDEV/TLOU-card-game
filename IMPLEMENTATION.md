@@ -34,11 +34,16 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M9: Main Menu & Compendium Hub** | Menu principale (`Nuova Partita`, `Riprendi`, `Compendio`), filtri categoria/rarità e Bestiario | 🟢 Completata | Completata |
 | **M10: Event Map & Draft Rewards** | Mappa a nodi/eventi (Scontri, Scavenging, Rifugio, Boss) e scelta ricompensa 1-su-3 | 🟢 Completata | Completata |
 | **M11: Full Run & Loadout Integration** | Collegamento completo Starter Deck, Sopravvissuto e progressione Run nell'Arena | 🟢 Completata | Completata |
-| **M12: Hero Signature Cards & Passives** | 12 Carte Signature uniche (2 per eroe: 1 Starter + 1 Evento/Rifugio) + Tratto Passivo Lore | 🟡 Pianificata | **Alta** |
-| **M13: TCG Card Frame & UI Restyling** | Frame TCG completo (`card.jsx`), bordi per rarità/signature, badge costo circolare e box effetti | 🟡 Pianificata | **Alta** |
-| **M14: Arena Overhaul & Dynamic Biomes** | Restyling `PlayerHUD` (Damage Ghost, Stamina Orbs), `EnemiesCard`, Floating Text e Sfondi per Nemico | 🟡 Pianificata | **Alta** |
-| **M15: Branching Map (Slay the Spire)** | Grafo ramificato a 7 piani con linee SVG interattive e scelta multi-sentiero (`RunMap.jsx`) | 🟡 Pianificata | **Alta** |
-| **M16: Motion Transitions & MainMenu FX** | Transizioni fluide con `motion` (Framer Motion), Spore CSS e Card Spedizione Attiva in `MainMenu.jsx` | 🟡 Pianificata | Media-Alta |
+| **M12: Hero Signature Cards & Passives** | 12 Carte Signature uniche (2 per eroe: 1 Starter + 1 Evento/Rifugio) + Tratto Passivo Lore | 🟢 Completata | Completata |
+| **M13: TCG Card Frame & UI Restyling** | Frame TCG completo (`card.jsx`), bordi per rarità/signature, badge costo circolare e box effetti | 🟢 Completata | Completata |
+| **M14: Arena Overhaul & Dynamic Biomes** | Restyling `PlayerHUD` (Damage Ghost, Stamina Orbs), `EnemiesCard`, Floating Text e Sfondi per Nemico | 🟢 Completata | Completata |
+| **M15: Branching Map (Slay the Spire)** | Grafo ramificato a 7 piani con linee SVG interattive e scelta multi-sentiero (`RunMap.jsx`) | 🟢 Completata | Completata |
+| **M16: Motion Transitions & MainMenu FX** | Transizioni fluide con `motion` (Framer Motion), Spore CSS e Card Spedizione Attiva in `MainMenu.jsx` | 🟢 Completata | Completata |
+| **M17: Full-Viewport Arena & Dynamic Hand** | Schermate `Menu` e `Arena` full-screen senza scroll (`100dvh`), rimozione box contenitore Arena e mano adattiva senza tagli | ⚪ Da Iniziare | Alta |
+| **M18: End-Turn Discard & Weapon Durability** | Scarto di tutte le carte a fine turno tranne i 4 Materiali di Crafting (`retainable: true`) e persistenza durabilità armi | ⚪ Da Iniziare | Alta |
+| **M19: Event Loot Card Reveal Modal** | Schermata animata di reveal della carta ottenuta da Cassa Militare / Signature con pulsante `Continua sulla Mappa` | ⚪ Da Iniziare | Alta |
+| **M20: Top-Down Vertical World Map** | Mappa vista dall'alto Sud→Nord (Campagna → Suburbia → Città) con Landmark integrati e sentieri curvi | ⚪ Da Iniziare | Alta |
+| **M21: 2D Animated Combat Actors (StS Style)** | Modelli/Sprite 2D animati per Sopravvissuti e Nemici nell'Arena (Idle, Attack Lunge, Hit Recoil, Stun) + Skill `tlou-2d-animator` | ⚪ Da Iniziare | Media |
 
 *Legenda: 🟢 Completata | 🟡 In Corso | ⚪ Da Iniziare | 🔴 Bloccata*
 
@@ -162,33 +167,78 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 
 ## 🎨 Fase 3: Restyling Estetico TCG, Carte Signature Eroi, Mappa a Bivi & Animazioni (M12–M16)
 
-### 🦸 Milestone 12: Carte Uniche (Signature Cards) & Passiva Lore per i 6 Sopravvissuti
-- [ ] **Sistema Doppia Carta Signature + Passiva Eroe (`Characters.js` & `cards.js`)**:
-  - Ogni eroe (`Joel`, `Tommy`, `Ellie`, `Dina`, `Abby`, `Lev`) possiede **1 Tratto Passivo Lore** e **2 Carte Signature Esclusive** (`tier: 'signature'`, `heroId`):
+### ✅ Milestone 12: Carte Uniche (Signature Cards) & Passiva Lore per i 6 Sopravvissuti (Completata)
+- [x] **Sistema Doppia Carta Signature + Passiva Eroe (`Characters.js` & `cards.js` — 44 Carte Totali)**:
+  - Ogni eroe (`Joel`, `Tommy`, `Ellie`, `Dina`, `Abby`, `Lev`) possiede **1 Tratto Passivo Lore** attivo in combattimento e **2 Carte Signature Esclusive** (`tier: 'signature'`, `heroId`):
     - **Signature #1 (Iniziale)**: inclusa in 2 copie nello Starter Deck dell'eroe scelto.
     - **Signature #2 (Reliquia / Avanzata)**: sbloccabile esclusivamente da quell'eroe nei **Rifugi**, negli **Eventi di percorso** o nelle **Ricompense Elite/Post-Scontro**.
-- [ ] Generazione batch delle **12 illustrazioni Signature** in stile graphic novel TLOU.
+- [x] Generazione batch di 9 illustrazioni Signature in stile graphic novel TLOU (`JoelBrutalPunch.jpg`, `SarahWatch.jpg`, `TommySpotter.jpg`, `TommyCustomRifle.jpg`, `EllieSwitchblade.jpg`, `SeattleFury.jpg`, `DinaSoundLure.jpg`, `AbbyShoulderCharge.jpg`, `AbbyCombatAdrenaline.jpg`; da generare al prossimo reset quota `DinaRadioTrap.jpg`, `LevRapidShot.jpg`, `LevIncendiaryArrows.jpg`).
 
-### 🃏 Milestone 13: Restyling Frame TCG delle Carte (`card.jsx`)
-- [ ] **Badge Costo Stamina Circolare** in alto a sinistra con feedback visivo giocabile/non giocabile.
-- [ ] **Cornice e Bagliore per Rarità (`tier`)**: `starter` (Zinco), `common` (Smeraldo), `uncommon` (Ciano), `rare` (Ambra/Oro), `signature` (Cremisi/Viola Eroico).
-- [ ] **Finestra Artwork Ampliata** con badge Durabilità e Calibro Munizioni sovrapposti in stile TCG moderno.
-- [ ] **Box Effetti Strutturato** con descrizione testuale concisa + icone + ricetta Crafting.
+### ✅ Milestone 13: Restyling Frame TCG delle Carte (`card.jsx`) (Completata)
+- [x] **Badge Costo Stamina Circolare** in alto a sinistra con feedback visivo giocabile/non giocabile.
+- [x] **Cornice e Bagliore per Rarità (`tier`)**: `starter` (Zinco), `common` (Smeraldo), `uncommon` (Ciano), `rare` (Ambra/Oro), `signature` (Cremisi/Rosa Eroico con stella `★ Eroe`).
+- [x] **Finestra Artwork Ampliata** con badge Durabilità e Calibro Munizioni sovrapposti in stile TCG moderno.
+- [x] **Box Effetti Strutturato** con descrizione testuale concisa + icone + ricetta Crafting.
 
-### ⚔️ Milestone 14: Restyling Arena, HUD con Damage Ghost, Floating Text & Sfondi Dinamici
-- [ ] **`PlayerHUD.jsx`**: Ritratto eroe incorniciato, indicatori **Stamina Orbs** (fulmini/pallini accesi o spenti), **Barra Vita con "Damage Ghost"** (buffer bar ritardata che scende gradualmente) e barra **Scudo** metallica integrata.
-- [ ] **`EnemiesCard.jsx`**: Rimozione del vecchio `bg-yellow-900`, nuovo frame tattico grunge scuro (`stone-950/zinc-900`), badge Intent cinematografico e animazioni di impatto/attacco.
-- [ ] **Floating Combat Text (`Arena.jsx`)**: Numeri fluttuanti animati (`-18 HP`, `+10 Scudo`, `+6 Cura`, `STUN!`) al centro dello scontro.
-- [ ] **Sfondi Dinamici per Fazione/Nemico (`Arena.jsx` & `index.css`)**: Atmosfera visiva diversa in base al nemico affrontato (*Nido di Spore / Tunnel Infetto* per Runner/Clicker/Stalker/Shambler/Bloater, *Rovine Piovose di Seattle* per WLF Soldier/Guard Dog/Enforcer, *Foresta in Fiamme* per Seraphite Brute).
+### ✅ Milestone 14: Restyling Arena, HUD con Damage Ghost, Floating Text & Sfondi Dinamici (Completata)
+- [x] **`PlayerHUD.jsx`**: Ritratto eroe incorniciato, indicatori **Stamina Orbs** (pallini luminosi), **Barra Vita con "Damage Ghost"** (buffer bar ritardata che scende gradualmente) e badge **Scudo** integrato.
+- [x] **`EnemiesCard.jsx`**: Rimozione del vecchio `bg-yellow-900`, nuovo frame tattico grunge scuro (`stone-950/zinc-900`), badge Intent cinematografico e barra vita con *Damage Ghost*.
+- [x] **Floating Combat Text (`Arena.jsx` & `useCombatEngine.js`)**: Numeri fluttuanti animati (`-18 HP`, `+10 Scudo`, `+6 HP`, `STORDITO!`) al centro dello scontro.
+- [x] **Sfondi Dinamici per Fazione/Nemico (`Arena.jsx` & `index.css`)**: Atmosfera visiva diversa in base al nemico affrontato (*Galleria Infetta* per Runner/Clicker/Stalker, *Rovine Piovose di Seattle* per WLF Guard Dog/Soldier/Enforcer, *Settore Rosso Allerta Massima* per Shambler/Seraphite Brute/Bloater).
 
-### 🗺️ Milestone 15: Mappa Ramificata in stile *Slay the Spire* (`RunMap.jsx`)
-- [ ] **Grafo a 7 Piani con Bivi Multipli**: 2–3 nodi per piano collegati da **sentieri SVG tratteggiati**.
-- [ ] **Scelta Tattica del Percorso**: Il giocatore sceglie liberamente quale sentiero imboccare ad ogni piano, sbloccando solo i nodi collegati alla propria posizione attuale (`Scontro`, `Elite`, `Falò / Rifugio`, `Cassa Scavenging`, `Evento Misterioso ?`, `Boss Finale`).
+### ✅ Milestone 15: Mappa Ramificata in stile *Slay the Spire* (`RunMap.jsx`) (Completata)
+- [x] **Grafo a 7 Piani con Bivi Multipli**: 15 nodi su 7 piani collegati da **sentieri SVG tratteggiati**.
+- [x] **Scelta Tattica del Percorso**: Il giocatore sceglie liberamente quale sentiero imboccare ad ogni piano, sbloccando solo i nodi collegati alla propria posizione attuale (`Scontro`, `Elite`, `Rifugio`, `Scavenging`, `Evento`, `Boss Finale`).
 
-### ✨ Milestone 16: Transizioni con `motion` (Framer Motion) & Atmosfera Main Menu
-- [ ] Installazione (previa conferma utente) di `motion` tramite `pnpm add motion`.
-- [ ] Transizioni fluide in entrata/uscita tra `MainMenu`, `RunMap`, `Arena` e `Compendium`.
-- [ ] **`MainMenu.jsx`**: Particelle di Spore/Polvere fluttuanti in CSS, vignettatura cinematografica e **Card Riepilogativa della Spedizione in Corso** (eroe attivo, piano mappa attuale, HP e dimensione mazzo prima di cliccare *Riprendi*).
+### ✅ Milestone 16: Transizioni con `motion` (Framer Motion) & Atmosfera Main Menu (Completata)
+- [x] Installazione di `motion` tramite `pnpm add motion` e animazioni di transizione vista in `App.jsx`.
+- [x] **`MainMenu.jsx`**: Particelle di Spore fluttuanti in CSS, vignettatura cinematografica e **Card Riepilogativa della Spedizione in Corso** (eroe attivo, piano mappa attuale, HP e dimensione mazzo prima di cliccare *Riprendi Spedizione*).
+
+---
+
+<!-- ================================================================= -->
+<!-- INIZIO SEZIONE: Fase 4 - Full-Screen, Scarti, Mappa Top-Down & 2D -->
+<!-- ================================================================= -->
+## 🗺️ Fase 4: Ottimizzazione Schermate Full-Viewport, Revisione Scarti, Reveal Ricompense, Mappa Top-Down & Attori 2D (M17–M21)
+
+> **Regola Git Obbligatoria**: Eseguire **1 commit atomico dedicato alla chiusura di ogni singola Milestone** (`M17`, `M18`, `M19`, `M20`, `M21`).
+
+### ⚪ Milestone 17: Full-Viewport Lock (`Menu` & `Arena`) e Rimozione Contenitore Arena per Spazio Mano (Da Iniziare)
+- [ ] **Schermate Full-Screen Senza Scroll Verticale (`App.jsx`, `MainMenu.jsx`, `Arena.jsx`, `index.css`)**:
+  - [ ] Bloccare l'altezza delle viste `menu` e `arena` all'intera viewport (`h-dvh overflow-hidden`) affinché lo sfondo e l'interfaccia occupino esattamente il 100% della pagina senza mai scorrere.
+- [ ] **Rimozione del Contenitore Boxato dell'Arena (`Arena.jsx`)**:
+  - [ ] Eliminare il box `max-w-7xl rounded-2xl border overflow-hidden` attorno allo scontro: portare lo sfondo dinamico del bioma a tutto schermo (`fixed inset-0`) e lasciare l'area di combattimento libera su tutta la larghezza della finestra.
+- [ ] **Espansione Spazio Mano Carte (`PlayerHand.jsx`)**:
+  - [ ] Rimuovere i vincoli di larghezza/clipping sulla mano e rendere l'overlap orizzontale (`marginLeft`) e la scala dinamici in base a `hand.length`, così anche con 6–8+ carte in mano tutte le carte entrano comodamente nello schermo senza essere tagliate.
+
+### ⚪ Milestone 18: Revisione Scarto a Fine Turno (`retainable`) & Persistenza Durabilità Armi (Da Iniziare)
+- [ ] **Scarto Totale a Fine Turno Eccetto i 4 Materiali di Crafting (`cards.js`)**:
+  - [ ] Impostare `retainable: true` **solo** sui 4 Materiali di Crafting (`straccio`, `alcool`, `blade`, `explosive`) per agevolare l'assemblaggio tra i turni.
+  - [ ] Impostare `retainable: false` su tutte le altre 40 carte (armi, munizioni, attacchi, difese, azioni, utility consumabili e carte Signature).
+- [ ] **Persistenza Durabilità Armi negli Scarti (`useCombatEngine.js` & `card.jsx`)**:
+  - [ ] Quando un'arma non viene usata o viene usata parzialmente nel turno (`durability > 0`), a fine turno finisce in `discardPile` conservando la propria `durability` residua per quando verrà ripescata.
+  - [ ] Aggiungere il badge visivo `📌 Resta in Mano` su `card.jsx` per le 4 carte `retainable: true`.
+
+### ⚪ Milestone 19: Modale Reveal "Carta Ottenuta" nei Nodi Evento / Cassa Militare (Da Iniziare)
+- [ ] **Schermata di Rivelazione Carta (`App.jsx` & `RunMap.jsx`)**:
+  - [ ] Quando il giocatore clicca su *"📦 Cassa Militare (+1 Carta Rara/Non Comune)"* o *"★ Sblocca Signature"*, mostrare una schermata/modale animata con la `<Card />` appena estratta, il riepilogo degli HP curati e il pulsante **"🗺️ Continua sulla Mappa →"** prima di passare al piano successivo.
+
+### ⚪ Milestone 20: Mappa Tattica Top-Down Verticale (Sud → Nord: Campagna → Città) (Da Iniziare)
+- [ ] **Sfondo Cartografico Top-Down & Sviluppo Verticale Sud → Nord (`RunMap.jsx` & `App.jsx`)**:
+  - [ ] Progressione dal **Basso (Sud — Piani 0–2: Campagne, Boschi e Fattorie)** al **Centro (Piani 3–4: Suburbia, Autostrada Crollata e Blocchi WLF)** fino all'**Alto (Nord — Piani 5–6: Centro Città Infetta e Grattacielo Boss)**.
+  - [ ] Sentieri curvi organici (`<path>` SVG in curva di Bézier) che seguono strade e tracciati.
+  - [ ] Ogni tappa integrata esteticamente nella mappa come **Landmark illustrato/topografico** con pedina del Sopravvissuto e anteprima interattiva.
+
+### ⚪ Milestone 21: Modelli/Sprite 2D Animati per Sopravvissuti e Nemici (Stile *Slay the Spire*) (Da Iniziare)
+- [ ] **Creazione Skill `.agents/skills/tlou-2d-animator/SKILL.md`**:
+  - [ ] Linee guida architetturali per rigging 2D a livelli (`motion` / CSS Puppet / Sprite scontornati), stati d'animazione (`idle`, `attack`, `hit`, `stun`, `defend`, `death`) e VFX da impatto.
+- [ ] **Attori 2D sul Campo di Battaglia (`Arena.jsx`, `FighterStage2D.jsx`)**:
+  - [ ] Disposizione faccia a faccia in stile *Slay the Spire* (Sopravvissuto a sinistra e Nemico a destra su pedane tattiche, eliminando l'aspetto da "card statica").
+  - [ ] Animazioni continue di **Idle breathing** (respiro, oscillazione arma, ombra dinamica), **Attack Lunge** (scatto in avanti verso il bersaglio), **Hit Recoil** (rinculo + flash + particelle) e **Stun Wobble**.
+  - [ ] Completamento delle ultime 3 illustrazioni Signature mancanti (`DinaRadioTrap.jpg`, `LevRapidShot.jpg`, `LevIncendiaryArrows.jpg`).
+<!-- ================================================================= -->
+<!-- FINE SEZIONE: Fase 4 - Full-Screen, Scarti, Mappa Top-Down & 2D   -->
+<!-- ================================================================= -->
 
 <!-- ================================================================= -->
 <!-- FINE SEZIONE: Dettaglio Task per Milestone                        -->
@@ -200,6 +250,10 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 <!-- INIZIO SEZIONE: Registro delle Sessioni e Commit                  -->
 <!-- ================================================================= -->
 ## 📝 Registro Attività e Sessioni
+
+### Sessione 4 (Consolidamento Fase 3 M12–M16 & Pianificazione Fase 4 M17–M21)
+- Completate e verificate **Milestone 12–16**: 12 Carte Signature Eroi + Passive Lore, nuovo Frame TCG (`card.jsx`), Arena con Damage Ghost, Stamina Orbs, Floating Combat Text, Sfondi Dinamici, Mappa a bivi su 7 piani e animazioni `motion`.
+- Pianificata **Fase 4 (M17–M21)**: ottimizzazione schermate full-viewport (`100dvh` senza scroll) e rimozione contenitore Arena per la mano di carte (M17), scarto totale a fine turno eccetto i 4 materiali di crafting (M18), modale reveal per carta rara ottenuta nei nodi evento (M19), mappa top-down verticale Sud→Nord da Campagna a Città (M20) e modelli 2D animati in stile *Slay the Spire* per personaggi e nemici (M21).
 
 ### Sessione 3 (Implementazione Completa M2 -> M7 per Checkpoint)
 - **Milestone 2**: Implementato deck engine runtime con `instanceId`, shuffle Fisher-Yates, gestione `retainable` e rimescolo automatico degli scarti.

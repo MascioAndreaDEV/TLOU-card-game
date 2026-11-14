@@ -34,6 +34,15 @@ import cannedRationImg from '../assets/img/CannedRation.jpg'
 import elDiabloImg from '../assets/img/ElDiablo.jpg'
 import desperateSprintImg from '../assets/img/DesperateSprint.jpg'
 import seraphiteHammerImg from '../assets/img/SeraphiteHammer.jpg'
+import joelBrutalPunchImg from '../assets/img/JoelBrutalPunch.jpg'
+import sarahWatchImg from '../assets/img/SarahWatch.jpg'
+import tommySpotterImg from '../assets/img/TommySpotter.jpg'
+import tommyCustomRifleImg from '../assets/img/TommyCustomRifle.jpg'
+import ellieSwitchbladeImg from '../assets/img/EllieSwitchblade.jpg'
+import seattleFuryImg from '../assets/img/SeattleFury.jpg'
+import dinaSoundLureImg from '../assets/img/DinaSoundLure.jpg'
+import abbyShoulderChargeImg from '../assets/img/AbbyShoulderCharge.jpg'
+import abbyCombatAdrenalineImg from '../assets/img/AbbyCombatAdrenaline.jpg'
 // === FINE SEZIONE: Import Asset Immagini Carte ===
 
 
@@ -656,6 +665,223 @@ export const CARD_DATABASE = [
             pierceShield: true,
             dismemberChance: 0.5,
         }
-    }
+    },
     // === FINE SEZIONE: Carta Martello dei Serafiti (Seraphite Hammer) ===
+
+    // === INIZIO SEZIONE: Carte Signature Joel Miller (Pugno Brutale & Orologio di Sarah) ===
+    {
+        id: 'joel_brutal_punch',
+        cardType: 'attack',
+        tier: 'signature',
+        heroId: 'Joel',
+        signatureType: 'starter',
+        retainable: false,
+        name: 'Pugno di Joel',
+        cost: 1,
+        img: joelBrutalPunchImg,
+        effects: {
+            damage: 9,
+            shield: 4,
+            stun: true,
+        }
+    },
+    {
+        id: 'sarah_watch',
+        cardType: 'utility',
+        tier: 'signature',
+        heroId: 'Joel',
+        signatureType: 'relic',
+        retainable: true,
+        durability: 2,
+        name: 'Orologio di Sarah',
+        cost: 0,
+        img: sarahWatchImg,
+        effects: {
+            heal: 10,
+            shield: 6,
+            staminaGain: 1,
+        }
+    },
+    // === FINE SEZIONE: Carte Signature Joel Miller (Pugno Brutale & Orologio di Sarah) ===
+
+    // === INIZIO SEZIONE: Carte Signature Tommy Miller (Mira Assistita & Fucile di Jackson) ===
+    {
+        id: 'tommy_spotter',
+        cardType: 'action',
+        tier: 'signature',
+        heroId: 'Tommy',
+        signatureType: 'starter',
+        retainable: false,
+        name: 'Mira Assistita .308',
+        cost: 0,
+        img: tommySpotterImg,
+        effects: {
+            shield: 4,
+            draw: 1,
+            grantAmmo: 'calibro.308',
+        }
+    },
+    {
+        id: 'tommy_custom_rifle',
+        cardType: 'weapon',
+        tier: 'signature',
+        heroId: 'Tommy',
+        signatureType: 'relic',
+        retainable: true,
+        durability: 3,
+        ammoType: 'calibro.308',
+        name: 'Fucile di Jackson',
+        cost: 1,
+        img: tommyCustomRifleImg,
+        effects: {
+            damage: 24,
+            pierceShield: true,
+            bleedChance: 1,
+            dismemberChance: 0.5,
+        }
+    },
+    // === FINE SEZIONE: Carte Signature Tommy Miller (Mira Assistita & Fucile di Jackson) ===
+
+    // === INIZIO SEZIONE: Carte Signature Ellie Williams (Coltello a Scatto & Furia di Seattle) ===
+    {
+        id: 'ellie_switchblade',
+        cardType: 'weapon',
+        tier: 'signature',
+        heroId: 'Ellie',
+        signatureType: 'starter',
+        retainable: true,
+        durability: 3,
+        name: 'Coltello di Ellie',
+        cost: 0,
+        img: ellieSwitchbladeImg,
+        effects: {
+            damage: 7,
+            bonusStunDamage: 6,
+            bleedChance: 0.85,
+        }
+    },
+    {
+        id: 'seattle_fury',
+        cardType: 'attack',
+        tier: 'signature',
+        heroId: 'Ellie',
+        signatureType: 'relic',
+        retainable: false,
+        name: 'Furia di Seattle',
+        cost: 1,
+        img: seattleFuryImg,
+        effects: {
+            damage: 14,
+            bonusBleedDamage: 8,
+            staminaGain: 1,
+            draw: 1,
+        }
+    },
+    // === FINE SEZIONE: Carte Signature Ellie Williams (Coltello a Scatto & Furia di Seattle) ===
+
+    // === INIZIO SEZIONE: Carte Signature Dina (Esca Sonora & Trappola Radio FEDRA) ===
+    {
+        id: 'dina_sound_lure',
+        cardType: 'utility',
+        tier: 'signature',
+        heroId: 'Dina',
+        signatureType: 'starter',
+        retainable: false,
+        name: 'Esca Sonora',
+        cost: 0,
+        img: dinaSoundLureImg,
+        effects: {
+            stun: true,
+            shield: 3,
+            draw: 1,
+        }
+    },
+    {
+        id: 'dina_radio_trap',
+        cardType: 'weapon',
+        tier: 'signature',
+        heroId: 'Dina',
+        signatureType: 'relic',
+        retainable: true,
+        durability: 2,
+        name: 'Trappola Radio',
+        cost: 1,
+        img: explosiveImg,
+        effects: {
+            damage: 16,
+            shield: 5,
+            bleedChance: 1,
+        }
+    },
+    // === FINE SEZIONE: Carte Signature Dina (Esca Sonora & Trappola Radio FEDRA) ===
+
+    // === INIZIO SEZIONE: Carte Signature Abby Anderson (Carica a Spallata & Adrenalina WLF) ===
+    {
+        id: 'abby_shoulder_charge',
+        cardType: 'attack',
+        tier: 'signature',
+        heroId: 'Abby',
+        signatureType: 'starter',
+        retainable: false,
+        name: 'Carica a Spallata',
+        cost: 1,
+        img: abbyShoulderChargeImg,
+        effects: {
+            damage: 10,
+            shield: 6,
+        }
+    },
+    {
+        id: 'abby_combat_adrenaline',
+        cardType: 'action',
+        tier: 'signature',
+        heroId: 'Abby',
+        signatureType: 'relic',
+        retainable: false,
+        name: 'Adrenalina WLF',
+        cost: 0,
+        img: abbyCombatAdrenalineImg,
+        effects: {
+            heal: 7,
+            staminaGain: 2,
+            draw: 1,
+        }
+    },
+    // === FINE SEZIONE: Carte Signature Abby Anderson (Carica a Spallata & Adrenalina WLF) ===
+
+    // === INIZIO SEZIONE: Carte Signature Lev (Scocca Rapida & Frecce Incendiarie) ===
+    {
+        id: 'lev_rapid_shot',
+        cardType: 'attack',
+        tier: 'signature',
+        heroId: 'Lev',
+        signatureType: 'starter',
+        retainable: false,
+        name: 'Scocca Rapida',
+        cost: 0,
+        img: huntingBowImg,
+        effects: {
+            damage: 8,
+            pierceShield: true,
+            draw: 1,
+        }
+    },
+    {
+        id: 'lev_incendiary_arrows',
+        cardType: 'weapon',
+        tier: 'signature',
+        heroId: 'Lev',
+        signatureType: 'relic',
+        retainable: true,
+        durability: 2,
+        name: 'Frecce Incendiarie',
+        cost: 1,
+        img: molotov,
+        effects: {
+            damage: 14,
+            pierceShield: true,
+            burnDamage: 9,
+        }
+    }
+    // === FINE SEZIONE: Carte Signature Lev (Scocca Rapida & Frecce Incendiarie) ===
 ]
