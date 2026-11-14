@@ -5,16 +5,25 @@ import { CARD_DATABASE } from '../data/cards';
 import PlayerHUD from './HUD/PlayerHUD';
 import PlayerHand from './PlayerHand';
 import EnemiesCard from './CharactersCards/EnemiesCard';
+import Card from './card';
 import { useCombatEngine } from '../hooks/useCombatEngine';
 // === FINE SEZIONE: Import Dipendenze e Moduli Arena ===
 
-// === INIZIO SEZIONE: Blueprint Entità Iniziali ===
-const enemy = ENEMIES_DATABASE[0];
-const character = CHARACTERS_DATABASE[0];
-// === FINE SEZIONE: Blueprint Entità Iniziali ===
+// === INIZIO SEZIONE: Blueprint Entità Fallback Default ===
+const defaultEnemy = ENEMIES_DATABASE[0];
+const defaultCharacter = CHARACTERS_DATABASE[0];
+// === FINE SEZIONE: Blueprint Entità Fallback Default ===
 
 // === INIZIO SEZIONE: Componente Principale Arena ===
-export default function Arena() {
+export default function Arena({
+    character = defaultCharacter,
+    enemy = defaultEnemy,
+    deck = CARD_DATABASE,
+    initialPlayerHp,
+    rewardChoices = [],
+    onCompleteVictory,
+    onReturnToMap,
+}) {
     const {
         enemyHp,
         playerHp,
@@ -40,7 +49,9 @@ export default function Arena() {
     } = useCombatEngine({
         character,
         enemy,
-        cardDatabase: CARD_DATABASE,
+        cardDatabase: deck,
+        allCardsDatabase: CARD_DATABASE,
+        initialPlayerHp,
     });
 
     return (
@@ -59,21 +70,65 @@ export default function Arena() {
             />
             {/* === FINE SEZIONE: Area Nemico e Intento === */}
 
-            {/* === INIZIO SEZIONE: Banner Vittoria / Sconfitta con Pulsante Rigioca === */}
+            {/* === INIZIO SEZIONE: Banner Vittoria con Draft Ricompensa 1-su-3 o Sconfitta === */}
             {isBattleOver && (
-                <div className="font-barlow flex flex-col items-center gap-3 px-8 py-5 rounded-xl bg-stone-950/95 border-2 border-amber-500 shadow-2xl z-50">
-                    <h2 className={`text-3xl font-bold uppercase tracking-widest ${isVictory ? 'text-emerald-400' : 'text-red-500'}`}>
-                        {isVictory ? 'MINACCIA ELIMINATA — VITTORIA!' : 'SEI SOPRAFFATTO — GAME OVER'}
+                <div className="font-barlow flex flex-col items-center gap-4 px-8 py-6 rounded-2xl bg-stone-950/95 border-2 border-amber-500 shadow-2xl z-50 max-w-5xl">
+                    <h2 className={`text-3xl font-extrabold uppercase tracking-widest ${isVictory ? 'text-emerald-400' : 'text-red-500'}`}>
+                        {isVictory ? `MINACCIA ELIMINATA (${enemy.name}) — VITTORIA!` : 'SEI SOPRAFFATTO — GAME OVER'}
                     </h2>
-                    <button
-                        onClick={handleRestartBattle}
-                        className="px-6 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold uppercase tracking-wider transition cursor-pointer"
-                    >
-                        Rigioca / Nuovo Scontro
-                    </button>
+
+                    {isVictory && onCompleteVictory && rewardChoices.length > 0 ? (
+                        <div className="flex flex-col items-center gap-4">
+                            <p className="text-sm text-stone-300 uppercase tracking-wider font-bold">
+                                🎁 Bottino di Sopravvivenza: Scegli 1 carta da aggiungere al tuo Mazzo della Run
+                            </p>
+
+                            <div className="flex flex-wrap items-center justify-center gap-5">
+                                {rewardChoices.map((rewardCard) => (
+                                    <div key={rewardCard.id} className="flex flex-col items-center gap-2">
+                                        <Card
+                                            card={rewardCard}
+                                            isPlayable={true}
+                                            playedCard={() => onCompleteVictory(playerHp, rewardCard)}
+                                        />
+                                        <button
+                                            onClick={() => onCompleteVictory(playerHp, rewardCard)}
+                                            className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-extrabold text-xs uppercase tracking-wider cursor-pointer transition"
+                                        >
+                                            + Prendi {rewardCard.name}
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => onCompleteVictory(Math.min(character.hp, playerHp + 5), null)}
+                                className="mt-1 px-5 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 border border-stone-600 text-stone-200 text-xs font-bold uppercase tracking-wider cursor-pointer transition"
+                            >
+                                🩹 Salta Carta e Fascia le Ferite (+5 HP e Prosegui sulla Mappa)
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap items-center gap-3">
+                            <button
+                                onClick={handleRestartBattle}
+                                className="px-6 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold uppercase tracking-wider transition cursor-pointer"
+                            >
+                                🔄 Riprova Scontro
+                            </button>
+                            {onReturnToMap && (
+                                <button
+                                    onClick={onReturnToMap}
+                                    className="px-6 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold uppercase tracking-wider border border-stone-600 transition cursor-pointer"
+                                >
+                                    🗺️ Torna alla Mappa
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
-            {/* === FINE SEZIONE: Banner Vittoria / Sconfitta con Pulsante Rigioca === */}
+            {/* === FINE SEZIONE: Banner Vittoria con Draft Ricompensa 1-su-3 o Sconfitta === */}
 
             {/* === INIZIO SEZIONE: HUD Giocatore === */}
             <PlayerHUD

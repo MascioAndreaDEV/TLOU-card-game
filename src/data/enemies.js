@@ -6,6 +6,8 @@ import seraphiteBruteImg from '../assets/img/SeraphiteBrute.jpg';
 import wlfSoldierImg from '../assets/img/WlfSoldier.jpg';
 import wlfGuardDogImg from '../assets/img/WlfGuardDog.jpg';
 import wlfEnforcerImg from '../assets/img/WlfEnforcer.jpg';
+import shamblerImg from '../assets/img/Shambler.jpg';
+import bloaterImg from '../assets/img/Bloater.jpg';
 // === FINE SEZIONE: Import Immagini Nemici ===
 
 // === INIZIO SEZIONE: Database Entità Nemiche ===
@@ -303,13 +305,13 @@ export const ENEMIES_DATABASE = [
     },
     // === FINE SEZIONE: Nemico SERAPHITE BRUTE ===
 
-    // === INIZIO SEZIONE: Nemico SHAMBLER (Immagine Fallback in attesa di Shambler.jpg) ===
+    // === INIZIO SEZIONE: Nemico SHAMBLER ===
     {
         id: 'shambler',
         name: 'SHAMBLER',
         type: 'infected',
         hp: 120,
-        image: stalkerImg,
+        image: shamblerImg,
         status: {
             isStun: false,
             isBleeding: false,
@@ -341,15 +343,15 @@ export const ENEMIES_DATABASE = [
             }
         ]
     },
-    // === FINE SEZIONE: Nemico SHAMBLER (Immagine Fallback in attesa di Shambler.jpg) ===
+    // === FINE SEZIONE: Nemico SHAMBLER ===
 
-    // === INIZIO SEZIONE: Nemico BLOATER (Immagine Fallback in attesa di Bloater.jpg) ===
+    // === INIZIO SEZIONE: Nemico BLOATER ===
     {
         id: 'bloater',
         name: 'BLOATER',
         type: 'infected',
         hp: 180,
-        image: clickerImg,
+        image: bloaterImg,
         status: {
             isStun: false,
             isBleeding: false,
@@ -386,6 +388,6 @@ export const ENEMIES_DATABASE = [
             }
         ]
     },
-    // === FINE SEZIONE: Nemico BLOATER (Immagine Fallback in attesa di Bloater.jpg) ===
+    // === FINE SEZIONE: Nemico BLOATER ===
 ];
 // === FINE SEZIONE: Database Entità Nemiche ===

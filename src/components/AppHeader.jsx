@@ -2,8 +2,9 @@
 export default function AppHeader({ currentView, onNavigate }) {
     // === INIZIO SEZIONE: Configurazione Voci Navbar ===
     const navItems = [
-        { id: "menu", label: "🏠 Menu Principale" },
-        { id: "arena", label: "⚔️ Arena Scontro" },
+        { id: "menu", label: "🏠 Menu" },
+        { id: "map", label: "🗺️ Mappa Run" },
+        { id: "arena", label: "⚔️ Arena" },
         { id: "compendium", label: "📖 Compendio" },
     ];
     // === FINE SEZIONE: Configurazione Voci Navbar ===
@@ -20,7 +21,7 @@ export default function AppHeader({ currentView, onNavigate }) {
             {/* === FINE SEZIONE: Titolo / Logo Interattivo === */}
 
             {/* === INIZIO SEZIONE: Pulsanti Navigazione Viste === */}
-            <nav className="flex items-center gap-2">
+            <nav className="flex flex-wrap items-center gap-2">
                 {navItems.map((item) => {
                     const isActive = currentView === item.id;
                     return (

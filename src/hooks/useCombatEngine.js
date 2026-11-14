@@ -81,11 +81,16 @@ export function getAvailableCrafts(hand, cardDatabase) {
 // === FINE SEZIONE: Funzioni Pure Helper (Shuffle Fisher-Yates, Deck Runtime, Intent, Pescata) ===
 
 // === INIZIO SEZIONE: Inizializzatore Stato Combattimento ===
-function createInitialCombatState({ character, enemy, cardDatabase }) {
+function createInitialCombatState({ character, enemy, cardDatabase, initialPlayerHp }) {
     const deck = createRuntimeDeck(cardDatabase);
+    const startingHp =
+        typeof initialPlayerHp === 'number' && initialPlayerHp > 0
+            ? Math.min(character.hp, initialPlayerHp)
+            : character.hp;
+
     return {
         enemyHp: enemy.hp,
-        playerHp: character.hp,
+        playerHp: startingHp,
         stamina: 3,
         enemyShield: 0,
         playerShield: 0,
@@ -450,10 +455,16 @@ function combatReducer(state, action) {
 // === FINE SEZIONE: Combat Reducer (Macchina a Stati Immutabile) ===
 
 // === INIZIO SEZIONE: Custom Hook useCombatEngine ===
-export function useCombatEngine({ character, enemy, cardDatabase }) {
+export function useCombatEngine({
+    character,
+    enemy,
+    cardDatabase,
+    allCardsDatabase = cardDatabase,
+    initialPlayerHp,
+}) {
     const [state, dispatch] = useReducer(
         combatReducer,
-        { character, enemy, cardDatabase },
+        { character, enemy, cardDatabase, initialPlayerHp },
         createInitialCombatState
     );
 
@@ -463,7 +474,7 @@ export function useCombatEngine({ character, enemy, cardDatabase }) {
     const isVictory = state.enemyHp <= 0;
     const isGameOver = state.playerHp <= 0;
     const isBattleOver = isVictory || isGameOver;
-    const availableCrafts = getAvailableCrafts(state.hand, cardDatabase);
+    const availableCrafts = getAvailableCrafts(state.hand, allCardsDatabase);
 
     function handlePlayCard(card) {
         if (isBattleOver || state.stamina < card.cost || card.craftOnly) return;
@@ -506,7 +517,7 @@ export function useCombatEngine({ character, enemy, cardDatabase }) {
         setIsEnemyHit(false);
         dispatch({
             type: 'RESTART_BATTLE',
-            payload: { character, enemy, cardDatabase },
+            payload: { character, enemy, cardDatabase, initialPlayerHp },
         });
     }
 

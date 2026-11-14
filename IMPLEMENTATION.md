@@ -32,8 +32,13 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
 | **M7: State Engine Refactoring** | Pulizia dead code e migrazione a `useReducer` / Custom Hook | 🟢 Completata | Completata |
 | **M8: Card Pool & Bestiary Expansion** | Espansione a 32 carte TLOU, 6 Sopravvissuti completi e 9 Minacce Nemiche | 🟢 Completata | Completata |
 | **M9: Main Menu & Compendium Hub** | Menu principale (`Nuova Partita`, `Riprendi`, `Compendio`), filtri categoria/rarità e Bestiario | 🟢 Completata | Completata |
-| **M10: Event Map & Draft Rewards** | Mappa a nodi/eventi (Scontri, Scavenging, Rifugio, Boss) e scelta ricompensa 1-su-3 | 🟡 In Corso | **Alta (Urgente)** |
-| **M11: Full Run & Loadout Integration** | Collegamento completo Starter Deck, Sopravvissuto e progressione Run nell'Arena | ⚪ Da Iniziare | Media-Alta |
+| **M10: Event Map & Draft Rewards** | Mappa a nodi/eventi (Scontri, Scavenging, Rifugio, Boss) e scelta ricompensa 1-su-3 | 🟢 Completata | Completata |
+| **M11: Full Run & Loadout Integration** | Collegamento completo Starter Deck, Sopravvissuto e progressione Run nell'Arena | 🟢 Completata | Completata |
+| **M12: Hero Signature Cards & Passives** | 12 Carte Signature uniche (2 per eroe: 1 Starter + 1 Evento/Rifugio) + Tratto Passivo Lore | 🟡 Pianificata | **Alta** |
+| **M13: TCG Card Frame & UI Restyling** | Frame TCG completo (`card.jsx`), bordi per rarità/signature, badge costo circolare e box effetti | 🟡 Pianificata | **Alta** |
+| **M14: Arena Overhaul & Dynamic Biomes** | Restyling `PlayerHUD` (Damage Ghost, Stamina Orbs), `EnemiesCard`, Floating Text e Sfondi per Nemico | 🟡 Pianificata | **Alta** |
+| **M15: Branching Map (Slay the Spire)** | Grafo ramificato a 7 piani con linee SVG interattive e scelta multi-sentiero (`RunMap.jsx`) | 🟡 Pianificata | **Alta** |
+| **M16: Motion Transitions & MainMenu FX** | Transizioni fluide con `motion` (Framer Motion), Spore CSS e Card Spedizione Attiva in `MainMenu.jsx` | 🟡 Pianificata | Media-Alta |
 
 *Legenda: 🟢 Completata | 🟡 In Corso | ⚪ Da Iniziare | 🔴 Bloccata*
 
@@ -139,19 +144,51 @@ Documento vivo di tracciamento dello stato di avanzamento, delle milestone archi
   - [x] `Martello dei Serafiti (Seraphite Hammer)` — Arma pesante (`cost: 2`, `durability: 3`, `damage: 18`, `pierceShield: true`, `dismemberChance: 0.5`).
 - [x] **Espansione Ritratti Sopravvissuti & Bestiario Nemici (`Characters.js` & `enemies.js`)**:
   - [x] Generato e collegato ritratto `Lev.jpg` per **Lev** (6/6 Sopravvissuti completi).
-  - [x] Generati e collegati ritratti `Runner.jpg`, `Stalker.jpg`, `WlfGuardDog.jpg`, `WlfSoldier.jpg`, `WlfEnforcer.jpg`, `SeraphiteBrute.jpg` e aggiunti i nuovi nemici (**WLF Guard Dog**, **WLF Soldier**, **WLF Enforcer**, **Seraphite Brute**, **Shambler** — 9 Nemici totali; da generare `Bloater.jpg` e `Shambler.jpg` al reset quota immagini).
+  - [x] Generati e collegati ritratti `Runner.jpg`, `Stalker.jpg`, `WlfGuardDog.jpg`, `WlfSoldier.jpg`, `WlfEnforcer.jpg`, `SeraphiteBrute.jpg`, `Shambler.jpg`, `Bloater.jpg` e aggiunti i nuovi nemici (**WLF Guard Dog**, **WLF Soldier**, **WLF Enforcer**, **Seraphite Brute**, **Shambler** — 9/9 Nemici completi).
 
 ### ✅ Milestone 9: Main Menu & Compendium Hub (Completata)
 - [x] Barra di navigazione in `AppHeader.jsx` e gestione viste in `App.jsx` con preservazione dello scontro attivo in background.
 - [x] Creazione schermata **Main Menu** (`MainMenu.jsx`) con pulsanti `Nuova Partita`, `Riprendi Scontro`, `Compendio` e contatori dinamici.
 - [x] Espansione `Compendium.jsx` con 3 tab (**Carte (32)**, **Sopravvissuti (6)**, **Minacce (9)**), filtri per tipo/rarità/crafting, ricerca testuale e pattern mosse nemiche.
 
-### 🗺️ Milestone 10: Mappa di Gioco ad Eventi & Ricompense (Draft)
-- [ ] Mappa a bivi della Zona di Quarantena con nodi: **Scontro Infetto**, **Evento Scavenging** (Farmacia, Cassa FEDRA, Banco da Lavoro), **Rifugio / Falò** (Cura o Rimozione carta) e **Boss Finale (Bloater)**.
-- [ ] Schermata **Ricompensa Post-Scontro**: scelta di 1 nuova carta su 3 dal pool delle carte ottenibili.
+### ✅ Milestone 10: Mappa di Gioco ad Eventi & Ricompense (Draft) (Completata)
+- [x] Mappa a 6 nodi della Zona di Quarantena (`RunMap.jsx`): **Scontro Base**, **Scontro Medio**, **Evento Avamposto FEDRA (Falò +25 HP o Cassa Scavenging +1 Carta Rara & +8 HP)**, **Scontro Avanzato**, **Scontro Elite** e **Boss Finale (Bloater)**.
+- [x] Schermata **Ricompensa Post-Scontro** in `Arena.jsx`: scelta di **1 nuova carta su 3** dal pool delle carte ottenibili (`common`, `uncommon`, `rare`) oppure cura rapida (`+5 HP`).
 
-### ⚔️ Milestone 11: Integrazione Completa Run & Loadout nell'Arena
-- [ ] Collegamento dello Starter Deck, del Sopravvissuto scelto e degli HP persistenti tra i nodi della Mappa e l'`Arena.jsx`.
+### ✅ Milestone 11: Integrazione Completa Run & Loadout nell'Arena (Completata)
+- [x] Selezione iniziale del **Sopravvissuto** (`RunMap.jsx`), generazione dello **Starter Deck (12 carte)**, visualizzatore zaino carte attuale e persistenza degli **HP residui** (`initialPlayerHp`) tra i nodi della Mappa e l'`Arena.jsx`.
+
+---
+
+## 🎨 Fase 3: Restyling Estetico TCG, Carte Signature Eroi, Mappa a Bivi & Animazioni (M12–M16)
+
+### 🦸 Milestone 12: Carte Uniche (Signature Cards) & Passiva Lore per i 6 Sopravvissuti
+- [ ] **Sistema Doppia Carta Signature + Passiva Eroe (`Characters.js` & `cards.js`)**:
+  - Ogni eroe (`Joel`, `Tommy`, `Ellie`, `Dina`, `Abby`, `Lev`) possiede **1 Tratto Passivo Lore** e **2 Carte Signature Esclusive** (`tier: 'signature'`, `heroId`):
+    - **Signature #1 (Iniziale)**: inclusa in 2 copie nello Starter Deck dell'eroe scelto.
+    - **Signature #2 (Reliquia / Avanzata)**: sbloccabile esclusivamente da quell'eroe nei **Rifugi**, negli **Eventi di percorso** o nelle **Ricompense Elite/Post-Scontro**.
+- [ ] Generazione batch delle **12 illustrazioni Signature** in stile graphic novel TLOU.
+
+### 🃏 Milestone 13: Restyling Frame TCG delle Carte (`card.jsx`)
+- [ ] **Badge Costo Stamina Circolare** in alto a sinistra con feedback visivo giocabile/non giocabile.
+- [ ] **Cornice e Bagliore per Rarità (`tier`)**: `starter` (Zinco), `common` (Smeraldo), `uncommon` (Ciano), `rare` (Ambra/Oro), `signature` (Cremisi/Viola Eroico).
+- [ ] **Finestra Artwork Ampliata** con badge Durabilità e Calibro Munizioni sovrapposti in stile TCG moderno.
+- [ ] **Box Effetti Strutturato** con descrizione testuale concisa + icone + ricetta Crafting.
+
+### ⚔️ Milestone 14: Restyling Arena, HUD con Damage Ghost, Floating Text & Sfondi Dinamici
+- [ ] **`PlayerHUD.jsx`**: Ritratto eroe incorniciato, indicatori **Stamina Orbs** (fulmini/pallini accesi o spenti), **Barra Vita con "Damage Ghost"** (buffer bar ritardata che scende gradualmente) e barra **Scudo** metallica integrata.
+- [ ] **`EnemiesCard.jsx`**: Rimozione del vecchio `bg-yellow-900`, nuovo frame tattico grunge scuro (`stone-950/zinc-900`), badge Intent cinematografico e animazioni di impatto/attacco.
+- [ ] **Floating Combat Text (`Arena.jsx`)**: Numeri fluttuanti animati (`-18 HP`, `+10 Scudo`, `+6 Cura`, `STUN!`) al centro dello scontro.
+- [ ] **Sfondi Dinamici per Fazione/Nemico (`Arena.jsx` & `index.css`)**: Atmosfera visiva diversa in base al nemico affrontato (*Nido di Spore / Tunnel Infetto* per Runner/Clicker/Stalker/Shambler/Bloater, *Rovine Piovose di Seattle* per WLF Soldier/Guard Dog/Enforcer, *Foresta in Fiamme* per Seraphite Brute).
+
+### 🗺️ Milestone 15: Mappa Ramificata in stile *Slay the Spire* (`RunMap.jsx`)
+- [ ] **Grafo a 7 Piani con Bivi Multipli**: 2–3 nodi per piano collegati da **sentieri SVG tratteggiati**.
+- [ ] **Scelta Tattica del Percorso**: Il giocatore sceglie liberamente quale sentiero imboccare ad ogni piano, sbloccando solo i nodi collegati alla propria posizione attuale (`Scontro`, `Elite`, `Falò / Rifugio`, `Cassa Scavenging`, `Evento Misterioso ?`, `Boss Finale`).
+
+### ✨ Milestone 16: Transizioni con `motion` (Framer Motion) & Atmosfera Main Menu
+- [ ] Installazione (previa conferma utente) di `motion` tramite `pnpm add motion`.
+- [ ] Transizioni fluide in entrata/uscita tra `MainMenu`, `RunMap`, `Arena` e `Compendium`.
+- [ ] **`MainMenu.jsx`**: Particelle di Spore/Polvere fluttuanti in CSS, vignettatura cinematografica e **Card Riepilogativa della Spedizione in Corso** (eroe attivo, piano mappa attuale, HP e dimensione mazzo prima di cliccare *Riprendi*).
 
 <!-- ================================================================= -->
 <!-- FINE SEZIONE: Dettaglio Task per Milestone                        -->
